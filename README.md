@@ -1,0 +1,1 @@
+This is the Full Stack Open 2022 project
