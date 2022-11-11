@@ -1,12 +1,14 @@
 import { useState } from 'react'
 
+const Title = props => <h1>{props.text}</h1>
+
 const Button = (props) => (
   <button onClick={props.handleClick}>
     {props.text}
   </button>
 )
 
-const Statistics = (props) => (<p>has {props.count} votes</p>)
+const Statistics = (props) => (<div>has {props.count} votes</div>)
 
 const App = () => {
   const anecdotes = [
@@ -21,24 +23,40 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState(new Uint8Array(7))
+  const [mostPoints, setMostPoints] = useState(selected)
 
   const handlePoints = () => {
-    const copy = { ...points}
-    
+    const copy = [ ...points]
     copy[selected] += 1
 
     setPoints(copy)
 
-  }
+    let highest_points = 0
 
+    for (let i = 0; i < copy.length; i++){
+      if (copy[i] > copy[highest_points]){
+        highest_points = i
+      }
+    }
+    setMostPoints(highest_points)
+  }  
+  
   return (
     <div>
-      {anecdotes[selected]}
-      <Statistics count={points[selected]} />
+      <div>
+        <Title text='Anecdote of the day' />
+        {anecdotes[selected]}
+        <Statistics count={points[selected]} />
+      </div>
       <div>
         <Button handleClick={() => handlePoints()} text='vote' />
         <Button handleClick={() => setSelected(Math.floor(Math.random() * 7))} text='next anecdote'/>
       </div>
+      <div>
+        <Title text='Anecdote with most votes' />
+        {anecdotes[mostPoints]}
+        <Statistics count={points[mostPoints]} />
+        </div>
     </div>
   )
 }
