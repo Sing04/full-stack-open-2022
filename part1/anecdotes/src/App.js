@@ -50,7 +50,7 @@ const App = () => {
       </div>
       <div>
         <Button handleClick={() => handlePoints()} text='vote' />
-        <Button handleClick={() => setSelected(Math.floor(Math.random() * 7))} text='next anecdote'/>
+        <Button handleClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))} text='next anecdote'/>
       </div>
       <div>
         <Title text='Anecdote with most votes' />
