@@ -1,3 +1,17 @@
+const Course = ({course}) => {
+
+  return(
+    <div>
+      <Header title={course.name} />
+      {course.parts.map(part => <Content key={part.id} name={part.name} exercises={part.exercises} />)}
+    </div>
+  )
+}
+
+const Header = (header) => (<h1>{header.title}</h1>)
+  
+const Content = (content) => (<p>{content.name} {content.exercises}</p>)
+
 const App = () => {
   const course = {
     id: 1,
