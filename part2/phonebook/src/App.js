@@ -17,22 +17,12 @@ const Filter = (props) => {
   )
 }
 
-const App = () => {
-  const [persons, setPersons] = useState([]) 
+const PersonForm = ({persons, setPersons}) => {
+
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [newSearch, setnewSearch] = useState('')
-  const [searchedNames, setNewSearchedNames] = useState([])
 
   const names = persons.map(person => person.name)
-
-  useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
-  }, [])
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -40,14 +30,6 @@ const App = () => {
 
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
-  }
-
-  const handleNameSearchChange = (event) => {
-    setnewSearch(event.target.value)
-
-    const searchedNamesList = event.target.value !== '' ? persons.filter(person => person.name.includes(event.target.value)) : []
-
-    setNewSearchedNames(searchedNamesList)
   }
 
   const addPerson = (event) => {
@@ -67,19 +49,50 @@ const App = () => {
       setNewNumber('')
     }
   }
+  return (
+    <form onSubmit={addPerson}>
+        <FormInput text='name:' value={newName} handleChange={handleNameChange}/>
+        <FormInput text='number:' value={newNumber} handleChange={handleNumberChange}/>
+        <div>
+          <button type="submit">add</button>
+        </div>
+    </form>
+  )
+}
+
+const FormInput = ({text, value, handleChange}) => {
+  return (
+    <div> {text} <input value={value} onChange={handleChange}/></div>
+  )
+}
+
+const App = () => {
+  const [persons, setPersons] = useState([]) 
+  const [newSearch, setnewSearch] = useState('')
+  const [searchedNames, setNewSearchedNames] = useState([])
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }, [])
+
+  const handleNameSearchChange = (event) => {
+    setnewSearch(event.target.value)
+
+    const searchedNamesList = event.target.value !== '' ? persons.filter(person => person.name.includes(event.target.value)) : []
+
+    setNewSearchedNames(searchedNamesList)
+  }
 
   return (
     <div>
       <h2>Phonebook</h2>
       <Filter value={newSearch} function={handleNameSearchChange} />
       <h3>Add a new</h3>
-      <form onSubmit={addPerson}>
-        <div> name: <input value={newName} onChange={handleNameChange}/></div>
-        <div> number: <input value={newNumber} onChange={handleNumberChange}/></div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm persons={persons} setPersons={setPersons}/>
       <h3>Numbers</h3>
       <Persons persons={searchedNames} />
     </div>
