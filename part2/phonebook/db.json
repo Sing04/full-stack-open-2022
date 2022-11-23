@@ -24,6 +24,11 @@
       "name": "Harry Potter",
       "number": "12-56-456456",
       "id": 5
+    },
+    {
+      "name": "Ron Weasley",
+      "number": "12-123-123456",
+      "id": 6
     }
   ]
 }
