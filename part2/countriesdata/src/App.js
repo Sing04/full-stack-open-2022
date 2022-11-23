@@ -6,6 +6,7 @@ const Search = ({countries}) => {
   const [search, setSearch] = useState('')
   const [searchedCountries, setSearchedCountries] = useState([])
   const [isShown, setIsShown] = useState(false)
+  const [weather, setWeather] = useState()
 
   const handleSearchCountries = (event) => {
       setSearch(event.target.value)
@@ -18,64 +19,58 @@ const Search = ({countries}) => {
  return (
     <div> 
       <div>find countries: <input value={search} onChange={handleSearchCountries}/></div>
-      <Countries countries={searchedCountries} isShown={isShown} setIsShown={setIsShown}/>
+      <Countries countries={searchedCountries} isShown={isShown} setIsShown={setIsShown} weather={weather} setWeather={setWeather}/>
     </div>
   )
 }
 
 const Countries = (props) => {
+
   const countries = props.countries
 
   const [clickedCountry, setClickedCountry] = useState()
-
-  CountriesDisplay(countries)
-
-  function CountriesDisplay(searchedCountries) {
     
-    const countriesLength = searchedCountries.length
+  const countriesLength = countries.length
 
-    console.log(countriesLength)
-
-    if (countriesLength > 10){
-      console.log('Over 10')
-      
-      return <UndefinedList />
-      
-    } 
+  if (countriesLength > 10){
     
-    if (countriesLength <= 10 && countriesLength > 1){
-
-      console.log('Between 1 and 10')
-
-      const sortedCountriesList = countries.sort(function (a, b) {
-        if (a.name.common < b.name.common){
-          return -1
-        } else if (a.name.common > b.name.common){
-          return 1
-        } else{
-          return 0
-        }
-      })
-
-      return <CountriesList countries={sortedCountriesList} handleShown={props.setIsShown} handleClickedCountry={setClickedCountry}/>
-
-    } 
+    return <UndefinedList />
     
-    if (countriesLength === 1){
-      console.log('one country')
+  } else if (countriesLength <= 10 && countriesLength > 1){
 
-      return <SingleCountry countryData={searchedCountries[0]} />
-     
-    }
+    const sortedCountriesList = countries.sort(function (a, b) {
+      if (a.name.common < b.name.common){
+        return -1
+      } else if (a.name.common > b.name.common){
+        return 1
+      } else{
+        return 0
+      }
+    })
 
     if (props.isShown === true){
 
-      return <SingleCountry countryData={clickedCountry} />
+      
+
+      return (
+        <div>
+          <CountriesList countries={sortedCountriesList} handleShown={props.setIsShown} handleClickedCountry={setClickedCountry}/>
+          <SingleCountry countryData={clickedCountry} weather={props.weather} setWeather={props.setWeather} />
+        </div>
+      )
     }
+
+    return <CountriesList countries={sortedCountriesList} handleShown={props.setIsShown} handleClickedCountry={setClickedCountry}/>
+
+  } else if (countriesLength === 1){
+
+    return <SingleCountry countryData={countries[0]} weather={props.weather} setWeather={props.setWeather}/>
+    
   }
 }
 
-function UndefinedList () {
+
+const UndefinedList = () => {
   return (
     <div>Too many matches, specify another filter</div>
   )
@@ -94,24 +89,25 @@ const CountriesList = (props) => {
     <ul> 
       {countries.map(country => 
         <li key={country.name.common}>{country.name.common} 
-          <Button handleClick={() => handleClick()} />
+          <Button country={country} handleClick={() => handleClick(country)} />
         </li>)} 
       </ul>
   )
 }
 
 const Button = (props) => {
+
   return (
     <button onClick={props.handleClick}>Show</button> 
   )
 }
 
-const SingleCountry = ({country}) => {
-  
+const SingleCountry = (props) => {
+
   return(
     <div>
-      <CountryData country={country} />
-      <Weather country={country} />
+      <CountryData country={props.countryData} />
+      <Weather country={props.countryData} weather={props.weather} setWeather={props.setWeather}/>
     </div>
   )
 }
@@ -137,25 +133,42 @@ const CountryData = ({country}) => {
   )
 }
 
-const Weather = ({country}) => {
-  const [weather, setWeather] = useState([])
+const Weather = (props) => {
+
+  const country = props.country
+  const weather = props.weather
+  const setWeather = props.setWeather
+  
   const api_key = process.env.REACT_APP_API_KEY
   const lat = country.capitalInfo.latlng[0]
   const lng = country.capitalInfo.latlng[1]
 
   useEffect(() => {
     axios
-      .get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${api_key}`)
+      .get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${api_key}&units=metric`)
       .then(response => {
         setWeather(response.data)
       })
-  }, [])
+  },[api_key, lat, lng, setWeather])
 
-  return(
-    <div>
-      {weather.temperature}
-    </div>
-  )
+  if (weather !== undefined) {
+    return(
+      <div>
+        <h2>Weather in {country.capital}</h2>
+        <div>
+          temperature {weather.main.temp} Celcius
+          <div>
+            <img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt='weather icon'/>
+          </div>
+        </div>
+        <div>
+          wind {weather.wind.speed} m/s
+        </div>
+      </div>
+    )
+  } else {
+    return null
+  }
 }
 
 function App() {
