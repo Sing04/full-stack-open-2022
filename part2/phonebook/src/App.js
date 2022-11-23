@@ -44,9 +44,14 @@ const PersonForm = ({persons, setPersons}) => {
         name: newName,
         number: newNumber
       }
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
+
+      axios
+      .post('http://localhost:3001/persons', personObject)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+      })
     }
   }
   return (
@@ -82,7 +87,7 @@ const App = () => {
   const handleNameSearchChange = (event) => {
     setnewSearch(event.target.value)
 
-    const searchedNamesList = event.target.value !== '' ? persons.filter(person => person.name.includes(event.target.value)) : []
+    const searchedNamesList = event.target.value !== '' ? persons.filter(person => person.name.toLowerCase().includes(event.target.value.toLowerCase())) : []
 
     setNewSearchedNames(searchedNamesList)
   }
