@@ -2,6 +2,29 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import phonebookService from './services/persons'
 
+const Notification = ({message}) => {
+
+  console.log(message)
+  const notificationStyle = {
+    fontStyle: 'italic',
+    fontSize: 25,
+    color: 'green',
+    border: '2px solid green',
+    marginBottom: 10,
+    padding: 8,
+    backgroundColor: '#CCCCCC'
+  }
+  if (message === null){
+    return <div></div>
+  }
+
+  return (
+    <div style={notificationStyle}>
+      {message}
+    </div>
+  )
+}
+
 const Persons = ({searchedNames, persons, setPersons, setNewSearchedNames}) => {
   return (
     <div>
@@ -46,7 +69,7 @@ const DeleteButton = ({person, persons, setPersons, setNewSearchedNames, searche
   )
 }
 
-const PersonForm = ({persons, setPersons, searchedNames, setNewSearchedNames}) => {
+const PersonForm = ({persons, setPersons, searchedNames, setNewSearchedNames, setNotificationMessage}) => {
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
@@ -105,6 +128,12 @@ const PersonForm = ({persons, setPersons, searchedNames, setNewSearchedNames}) =
           if (searchedNames.length !== 0){ 
             setNewSearchedNames(searchedNames.concat(returnedPerson))
           }
+          //Generate message that person was added for 4 seconds
+          setNotificationMessage(`Added ${returnedPerson.name}`)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 4000)
+
         })
     }
   }
@@ -129,6 +158,7 @@ const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newSearch, setnewSearch] = useState('')
   const [searchedNames, setNewSearchedNames] = useState([])
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   //Downloads data from JSON server
   useEffect(() => {
@@ -151,9 +181,14 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter value={newSearch} function={handleNameSearchChange} />
+      <div>
+        <Notification message={notificationMessage} />
+      </div>
+      <div>
+        <Filter value={newSearch} function={handleNameSearchChange} />
+      </div>
       <h3>Add a new</h3>
-      <PersonForm persons={persons} setPersons={setPersons} searchedNames={searchedNames} setNewSearchedNames={setNewSearchedNames} />
+      <PersonForm persons={persons} setPersons={setPersons} searchedNames={searchedNames} setNewSearchedNames={setNewSearchedNames} setNotificationMessage={setNotificationMessage} />
       <h3>Numbers</h3>
       <Persons searchedNames={searchedNames} persons={persons} setPersons={setPersons} setNewSearchedNames={setNewSearchedNames}/>
     </div>
