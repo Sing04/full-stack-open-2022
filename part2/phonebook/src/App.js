@@ -2,25 +2,24 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import phonebookService from './services/persons'
 
-const Notification = ({message}) => {
+const Notification = (props) => {
+  const notification = props.message;
 
-  console.log(message)
   const notificationStyle = {
-    fontStyle: 'italic',
-    fontSize: 25,
-    color: 'green',
-    border: '2px solid green',
+    fontSize: 20,
+    color: notification.color,
+    border: `2px solid ${notification.color}`,
     marginBottom: 10,
     padding: 8,
     backgroundColor: '#CCCCCC'
   }
-  if (message === null){
+  if (notification.message === null){
     return <div></div>
   }
 
   return (
     <div style={notificationStyle}>
-      {message}
+      {notification.message}
     </div>
   )
 }
@@ -108,6 +107,17 @@ const PersonForm = ({persons, setPersons, searchedNames, setNewSearchedNames, se
             if (searchedNames.length !== 0){ 
               setNewSearchedNames(searchedNames.map(person => person.id !== samePerson.id ? person : returnedPerson))
             }
+          }).catch(error => {
+            //Generate notification that the person has already been deleted
+            setNotificationMessage({
+              message: `Information of ${changedPerson.name} has already been removed from the server`,
+              color: 'red'
+            })
+            setTimeout(() => {
+              setNotificationMessage({
+                message: null,
+                color: 'white'})
+            }, 4000)
           })
       }
     
@@ -129,9 +139,14 @@ const PersonForm = ({persons, setPersons, searchedNames, setNewSearchedNames, se
             setNewSearchedNames(searchedNames.concat(returnedPerson))
           }
           //Generate message that person was added for 4 seconds
-          setNotificationMessage(`Added ${returnedPerson.name}`)
+          setNotificationMessage({
+            message: `Added ${returnedPerson.name}`,
+            color: 'green'
+            })
           setTimeout(() => {
-            setNotificationMessage(null)
+            setNotificationMessage({
+              message: null,
+              color: 'white'})
           }, 4000)
 
         })
@@ -158,8 +173,12 @@ const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newSearch, setnewSearch] = useState('')
   const [searchedNames, setNewSearchedNames] = useState([])
-  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState({
+    message: null,
+    color: 'white'
+  })
 
+  console.log(notificationMessage)
   //Downloads data from JSON server
   useEffect(() => {
     axios
