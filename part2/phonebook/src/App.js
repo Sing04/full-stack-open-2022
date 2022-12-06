@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import phonebookService from './services/persons'
 
@@ -24,15 +23,15 @@ const Notification = (props) => {
   )
 }
 
-const Persons = ({searchedNames, persons, setPersons, setNewSearchedNames}) => {
+const Persons = ({searchedNames, persons, setPersons, setNewSearchedNames, setNotificationMessage}) => {
   return (
     <div>
-      {searchedNames.map(person => <Person key={person.name} person={person} persons={persons} setPersons={setPersons} setNewSearchedNames={setNewSearchedNames} searchedNames={searchedNames}/>)}
+      {searchedNames.map(person => <Person key={person.name} person={person} persons={persons} setPersons={setPersons} setNewSearchedNames={setNewSearchedNames} searchedNames={searchedNames} setNotificationMessage={setNotificationMessage}/>)}
     </div>
   )
 }
 
-const Person = ({person, persons, setPersons, setNewSearchedNames, searchedNames}) => (<div>{person.name} {person.number} <DeleteButton person={person} persons={persons} setPersons={setPersons} setNewSearchedNames={setNewSearchedNames} searchedNames={searchedNames}/></div>)
+const Person = ({person, persons, setPersons, setNewSearchedNames, searchedNames, setNotificationMessage}) => (<div>{person.name} {person.number} <DeleteButton person={person} persons={persons} setPersons={setPersons} setNewSearchedNames={setNewSearchedNames} searchedNames={searchedNames} setNotificationMessage={setNotificationMessage}/></div>)
 
 const Filter = (props) => {
   return (
@@ -40,7 +39,7 @@ const Filter = (props) => {
   )
 }
 
-const DeleteButton = ({person, persons, setPersons, setNewSearchedNames, searchedNames}) =>{
+const DeleteButton = ({person, persons, setPersons, setNewSearchedNames, searchedNames, setNotificationMessage}) =>{
   
   function handleDelete(selectedPerson){
     //Creates pop-up confirm window to confirm deletion
@@ -51,24 +50,29 @@ const DeleteButton = ({person, persons, setPersons, setNewSearchedNames, searche
       phonebookService
         .deletePerson(selectedPerson.id)
         .then(response => {
-          if (response === 200){
             //If the deletion is successful, resets persons list without the deleted person
             setPersons(persons.filter(person => person.id !== selectedPerson.id))
             //Updates the numbers list without the deleted person
             setNewSearchedNames(searchedNames.filter(person => person.id !== selectedPerson.id))
-          }
-        }).catch(error => {
-          alert(`Error: deletion of ${selectedPerson} unsuccessful`)
+            //Notify user of successful deletion
+            setNotificationMessage({
+              message: `Deleted ${selectedPerson.name}`,
+              color: 'green'
+              })
+            setTimeout(() => {
+              setNotificationMessage({
+                message: null,
+                color: 'white'})
+            }, 4000)
         })
     }
-    
   }
   return (
     <button onClick={() => handleDelete(person)}>delete</button>
   )
 }
 
-const PersonForm = ({persons, setPersons, searchedNames, setNewSearchedNames, setNotificationMessage}) => {
+const PersonForm = ({persons, setPersons, searchedNames, setNewSearchedNames, setNotificationMessage, newSearch}) => {
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
@@ -87,8 +91,7 @@ const PersonForm = ({persons, setPersons, searchedNames, setNewSearchedNames, se
   const addPerson = (event) => {
 
     event.preventDefault()
-    
-    const samePerson = persons.find(person => person.name.includes(newName))
+    const samePerson = persons.find(person => person.name === newName)
     
     //If the user wants to add a person that already exists, create pop-up confirmation to modify person's number
     if (samePerson !== undefined){
@@ -104,20 +107,27 @@ const PersonForm = ({persons, setPersons, searchedNames, setNewSearchedNames, se
             setNewName('')
             setNewNumber('')
             //Add the person to the searched names list if the user used the filter field while adding a new person
-            if (searchedNames.length !== 0){ 
+            if (searchedNames.length !== 0 ){ 
               setNewSearchedNames(searchedNames.map(person => person.id !== samePerson.id ? person : returnedPerson))
             }
           }).catch(error => {
             //Generate notification that the person has already been deleted
-            setNotificationMessage({
-              message: `Information of ${changedPerson.name} has already been removed from the server`,
-              color: 'red'
-            })
+            if (error.response.data.error.includes('Validation failed')) {
+              setNotificationMessage({
+                message: error.response.data.error,
+                color: 'red'
+              })
+            } else {
+              setNotificationMessage({
+                message: `Information of ${changedPerson.name} has already been removed from the server`,
+                color: 'red'
+              })
+            }
             setTimeout(() => {
               setNotificationMessage({
                 message: null,
                 color: 'white'})
-            }, 4000)
+            }, 6000)
           })
       }
     
@@ -135,7 +145,7 @@ const PersonForm = ({persons, setPersons, searchedNames, setNewSearchedNames, se
           setNewName('')
           setNewNumber('')
           //Add the person to the searched names list if the user used the filter field while adding a new person
-          if (searchedNames.length !== 0){ 
+          if ((searchedNames.length !== 0 && returnedPerson.name.toLowerCase().includes(newSearch.toLowerCase())) || (searchedNames.length === 0 && newSearch !== '' && returnedPerson.name.toLowerCase().includes(newSearch.toLowerCase()))){
             setNewSearchedNames(searchedNames.concat(returnedPerson))
           }
           //Generate message that person was added for 4 seconds
@@ -148,7 +158,17 @@ const PersonForm = ({persons, setPersons, searchedNames, setNewSearchedNames, se
               message: null,
               color: 'white'})
           }, 4000)
-
+        }).catch(error => {
+          //Generate error notification
+          setNotificationMessage({
+            message: error.response.data.error,
+            color: 'red'
+          })
+          setTimeout(() => {
+            setNotificationMessage({
+              message: null,
+              color: 'white'})
+          }, 6000)
         })
     }
   }
@@ -178,11 +198,10 @@ const App = () => {
     color: 'white'
   })
 
-  console.log(notificationMessage)
   //Downloads data from JSON server
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
+    phonebookService
+      .getAll()
       .then(response => {
         setPersons(response.data)
       })
@@ -207,9 +226,9 @@ const App = () => {
         <Filter value={newSearch} function={handleNameSearchChange} />
       </div>
       <h3>Add a new</h3>
-      <PersonForm persons={persons} setPersons={setPersons} searchedNames={searchedNames} setNewSearchedNames={setNewSearchedNames} setNotificationMessage={setNotificationMessage} />
+      <PersonForm persons={persons} setPersons={setPersons} searchedNames={searchedNames} setNewSearchedNames={setNewSearchedNames} setNotificationMessage={setNotificationMessage} newSearch={newSearch}/>
       <h3>Numbers</h3>
-      <Persons searchedNames={searchedNames} persons={persons} setPersons={setPersons} setNewSearchedNames={setNewSearchedNames}/>
+      <Persons searchedNames={searchedNames} persons={persons} setPersons={setPersons} setNewSearchedNames={setNewSearchedNames} setNotificationMessage={setNotificationMessage}/>
     </div>
   )
 }

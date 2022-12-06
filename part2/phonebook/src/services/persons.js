@@ -1,5 +1,9 @@
 import axios from 'axios'
-const baseURL = 'http://localhost:3001/persons'
+const baseURL = '/api/persons'
+
+const getAll = () => {
+    return axios.get(baseURL)
+}
 
 const create = newObject => {
     const request = axios.post(baseURL, newObject)
@@ -17,6 +21,7 @@ const update = (id, newObject) => {
 }
 
 const phonebookService = {
+    getAll,
     create,
     deletePerson,
     update
