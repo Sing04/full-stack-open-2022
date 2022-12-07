@@ -1,0 +1,31 @@
+{
+  "name": "blog_list",
+  "version": "1.0.0",
+  "description": "''",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test": "\"echo \\\"Error: no test specified\\\" && exit 1\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sing04/full-stack-open-2022.git"
+  },
+  "author": "Emilie Sing",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sing04/full-stack-open-2022/issues"
+  },
+  "homepage": "https://github.com/Sing04/full-stack-open-2022#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.8.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.29.0",
+    "nodemon": "^2.0.20"
+  }
+}
