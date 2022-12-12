@@ -56,7 +56,7 @@ test('a valid blog can be added', async () => {
   )
 })
 
-test('adding a blog with no likes', async () => {
+test('adding a blog with no likes defaults the likes property to the value 0', async () => {
   const newBlog = {
     title: 'Adding a blog with no likes',
     author: 'Hermione Granger',
@@ -71,6 +71,46 @@ test('adding a blog with no likes', async () => {
 
   expect(response.body.likes).toBe(0)
 
+})
+
+describe ('adding a blog with missing title or url, returns 400', () => {
+  test('adding a blog without a title', async () => {
+    const newBlog = {
+      author: 'Severus Snape',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 6
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+  
+  test('adding a blog without a url', async () => {
+    const newBlog = {
+      title: 'Adding a blog without a url',
+      author: 'Albus Dumbledore',
+      likes: 6
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+
+  test('adding a blog without a title or url', async () => {
+    const newBlog = {
+      author: 'Dobey',
+      likes: 6
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  }) 
 })
 
 afterAll(() => {
