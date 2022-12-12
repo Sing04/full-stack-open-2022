@@ -3,3 +3,10 @@ GET http://localhost:3003/api/blogs
 ###
 
 POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Adding a blog with no likes",
+  "author": "Hermione Granger",
+  "url": "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html"
+}
