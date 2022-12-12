@@ -2,7 +2,7 @@ const Blog = require('../models/blog')
 
 const initialBlogs = [
   {
-    title: 'Go To Statement Considered Harmful',
+    title: 'How to Start a Blog',
     author: 'Harry Potter',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
     likes: 12,
@@ -16,7 +16,7 @@ const initialBlogs = [
     __v: 0
   },
   {
-    title: 'Go To Statement Considered Harmful',
+    title: 'Best Practices for Writing a Blog',
     author: 'Ron Weasley',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
     likes: 7,
