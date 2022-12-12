@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
+const _ = require('lodash')
 const dummy = (blogs) => {
   return 1
 }
 
 const totalLikes = (blogs) => {
   const reducer = (sum, item) => {
-    console.log(item)
     return sum + item.likes
   }
 
@@ -14,7 +14,6 @@ const totalLikes = (blogs) => {
 
 const favoriteBlog = (blogs) => {
   const reducer = (favorite, item) => {
-    console.log(item.author)
     if (favorite.likes > item.likes) {
       return {
         title: favorite.title,
@@ -35,8 +34,13 @@ const favoriteBlog = (blogs) => {
     : blogs.reduce(reducer, blogs[0])
 }
 
+const mostBlogs = (blogs) => {
+ 
+}
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs
 }
