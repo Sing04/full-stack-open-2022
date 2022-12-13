@@ -6,14 +6,15 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "author": "Hermione Granger",
+  "title": "Adding a fifth blog with user",
+  "author": "Harry Potter",
   "url": "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
   "likes": 5
 }
 
 ###
 
-DELETE http://localhost:3003/api/blogs/6
+DELETE http://localhost:3003/api/blogs/6398e10ce0bbcbe6495c700c
 
 ###
 PUT http://localhost:3003/api/blogs/6
