@@ -15,8 +15,6 @@ usersRouter.post('/', async (request, response) => {
   const name = body.name
   const password = body.password
 
-  console.log(password)
-
   const existingUser = await User.findOne({ username })
   if (existingUser) {
     return response.status(400).json({

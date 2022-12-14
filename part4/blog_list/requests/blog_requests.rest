@@ -4,10 +4,10 @@ GET http://localhost:3003/api/blogs
 
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer 1654651
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlNuYXBlIiwiaWQiOiI2MzlhMjRjZTAyNzE5M2MxYjVhZDAzZTMiLCJpYXQiOjE2NzEwNDcyMDksImV4cCI6MTY3MTA1MDgwOX0.laUrR0A2EdoCuo2CQD5URL6u8OcefajJeZIc0TSYRcs
 
 {
-  "title": "Adding a fifth blog with user",
+  "title": "Token Authentication",
   "author": "Harry Potter",
   "url": "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
   "likes": 5
