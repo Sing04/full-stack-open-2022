@@ -1,0 +1,28 @@
+GET http://localhost:3003/api/blogs
+
+###
+
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlNuYXBlIiwiaWQiOiI2MzlhMjRjZTAyNzE5M2MxYjVhZDAzZTMiLCJpYXQiOjE2NzEwNTEwNTksImV4cCI6MTY3MTA1NDY1OX0.UNl1dG80WrD3f7KaaX-Sh9U8OcktQY1PdOcix8epjL8
+
+{
+  "title": "Token Authentication with UserExtractor",
+  "author": "Harry Potter",
+  "url": "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+  "likes": 5
+}
+
+###
+
+DELETE http://localhost:3003/api/blogs/639a404c387319e878807e7a
+Authorization: bearer 
+
+
+###
+PUT http://localhost:3003/api/blogs/6
+Content-Type: application/json
+
+{
+  "likes": 444
+}

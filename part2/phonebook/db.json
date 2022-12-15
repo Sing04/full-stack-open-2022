@@ -34,6 +34,16 @@
       "name": "Hagrid",
       "number": "123456",
       "id": 8
+    },
+    {
+      "name": "Harry Potter",
+      "number": "",
+      "id": 9
+    },
+    {
+      "name": "",
+      "number": "123",
+      "id": 10
     }
   ]
 }
