@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import loginService from '../services/login'
 
-const Login = ({setUser}) => {
+const Login = ({setUser, setNotificationMessage}) => {
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
 
@@ -21,7 +21,15 @@ const Login = ({setUser}) => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      alert('Wrong credentials')
+        setNotificationMessage({
+          message: 'Wrong username or password',
+          color: 'red'
+        })
+        setTimeout(() => {
+          setNotificationMessage({
+            message: null,
+            color: 'white'})
+        }, 5000)
     }
   }
 

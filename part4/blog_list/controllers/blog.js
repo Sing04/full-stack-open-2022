@@ -14,8 +14,18 @@ blogRouter.post('/', middleware.userExtractor, async (request, response) => {
   const user = await User.findById(request.user.id)
 
   const blog_content = request.body
-  if (blog_content.title === undefined || blog_content.url === undefined) {
-    response.status(400).end()
+  if (blog_content.title === '') {
+    return response.status(400).json({
+      error: 'Must provide a title'
+    })
+  } else if (blog_content.url === '') {
+    return response.status(400).json({
+      error: 'Must provide blog url'
+    })
+  } else if (blog_content.author === '') {
+    return response.status(400).json({
+      error: 'Must provide blog author'
+    })
   } else {
     const blog = blog_content.likes === undefined
       ? new Blog ({...blog_content,

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const NewBlogForm = ({blogs, setBlogs}) => {
+const NewBlogForm = ({blogs, setBlogs, setNotificationMessage}) => {
 
   const newBlogFormStyle = {
     marginBottom: 15
@@ -31,8 +31,26 @@ const NewBlogForm = ({blogs, setBlogs}) => {
       setUrl('')
       setBlogs(blogs.concat(blog))
 
-    } catch (exception) {
-      console.log(exception.response)
+      setNotificationMessage({
+        message: `A new blog ${blog.title} by ${blog.author} added!`,
+        color: 'green'
+      })
+      setTimeout(() => {
+        setNotificationMessage({
+          message: null,
+          color: 'white'})
+      }, 5000)
+
+    } catch (error) {
+      setNotificationMessage({
+        message: error.response.data.error,
+        color: 'red'
+      })
+      setTimeout(() => {
+        setNotificationMessage({
+          message: null,
+          color: 'white'})
+      }, 5000)
     }
   }
 

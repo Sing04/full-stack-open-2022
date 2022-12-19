@@ -2,12 +2,17 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Login from './components/Login'
 import Logout from './components/Logout'
+import Notification from './components/Notification'
 import NewBlogForm from './components/NewBlogForm'
 import blogService from './services/blogs'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState({
+    message: null,
+    color: 'white'
+  })
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -26,8 +31,9 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={notificationMessage} />
       {user === null
-      ? <Login setUser={setUser} />
+      ? <Login setUser={setUser} setNotificationMessage={setNotificationMessage} />
       : <div>
           <div>
             <h2>Blogs</h2>
@@ -35,7 +41,7 @@ const App = () => {
             <Logout setUser={setUser} />
           </div>
           <div>
-            <NewBlogForm blogs={blogs} setBlogs={setBlogs}/>
+            <NewBlogForm blogs={blogs} setBlogs={setBlogs} setNotificationMessage={setNotificationMessage} />
           </div>
           <div>
             {blogs.map(blog =>
