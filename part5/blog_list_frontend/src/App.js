@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Login from './components/Login'
 import Logout from './components/Logout'
+import NewBlogForm from './components/NewBlogForm'
 import blogService from './services/blogs'
 
 const App = () => {
@@ -19,18 +20,22 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
   return (
     <div>
       {user === null
-      ? <Login user={user} setUser={setUser} />
+      ? <Login setUser={setUser} />
       : <div>
-          <h2>blogs</h2>
           <div>
+            <h2>Blogs</h2>
             <p style={{fontStyle: 'italic'}}>{user.name} logged in </p>
             <Logout setUser={setUser} />
+          </div>
+          <div>
+            <NewBlogForm blogs={blogs} setBlogs={setBlogs}/>
           </div>
           <div>
             {blogs.map(blog =>

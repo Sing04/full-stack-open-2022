@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import loginService from '../services/login'
 
-const Login = ({user, setUser}) => {
+const Login = ({setUser}) => {
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
 
@@ -16,6 +16,7 @@ const Login = ({user, setUser}) => {
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
+      
       setUser(user)
       setUsername('')
       setPassword('')
