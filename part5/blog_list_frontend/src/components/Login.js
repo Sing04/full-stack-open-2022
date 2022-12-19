@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import loginService from '../services/login'
+import blogService from '../services/blogs'
 
 const Login = ({setUser, setNotificationMessage}) => {
   const [password, setPassword] = useState('')
@@ -17,9 +18,11 @@ const Login = ({setUser, setNotificationMessage}) => {
         'loggedBlogappUser', JSON.stringify(user)
       )
       
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
+      
     } catch (exception) {
         setNotificationMessage({
           message: 'Wrong username or password',

@@ -15,7 +15,7 @@ const NewBlogForm = ({blogs, setBlogs, setNotificationMessage}) => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   
-  const handleNewBlog = async (event) => {
+  const handleNewBlog = async (event) => {    
     event.preventDefault()
 
     try {
