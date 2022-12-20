@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Toggable = (props) => {
   const [visible, setVisible] = useState(false)
@@ -8,6 +9,10 @@ const Toggable = (props) => {
 
   const toggleVisibility = () => {
     setVisible(!visible)
+  }
+
+  Toggable.propTypes = {
+    buttonLabel: PropTypes.string.isRequired
   }
 
   return (

@@ -1,5 +1,5 @@
 const Notification = (props) => {
-  const notification = props.message;
+  const notification = props.message
 
   const notificationStyle = {
     fontSize: 20,

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
 
-const Login = ({setUser, setNotificationMessage}) => {
+const Login = ({ setUser, setNotificationMessage }) => {
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
 
@@ -17,22 +17,22 @@ const Login = ({setUser, setNotificationMessage}) => {
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
-      
+
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
-      
+
     } catch (exception) {
+      setNotificationMessage({
+        message: 'Wrong username or password',
+        color: 'red'
+      })
+      setTimeout(() => {
         setNotificationMessage({
-          message: 'Wrong username or password',
-          color: 'red'
-        })
-        setTimeout(() => {
-          setNotificationMessage({
-            message: null,
-            color: 'white'})
-        }, 5000)
+          message: null,
+          color: 'white' })
+      }, 5000)
     }
   }
 
@@ -41,17 +41,17 @@ const Login = ({setUser, setNotificationMessage}) => {
       <h1>Application Login</h1>
       <form onSubmit={handleLogin}>
         <div>
-          username: 
+          username:
           <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)} />
         </div>
         <div>
-          password: 
+          password:
           <input type="password" value={password} name="Password" onChange={({ target }) => setPassword(target.value)} />
         </div>
         <div>
           <button type="submit">Login</button>
-        </div> 
-      </form> 
+        </div>
+      </form>
     </div>
   )
 }

@@ -27,9 +27,9 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll()
-    .then(blogs =>
-      setBlogs(blogs.sort(sortBlogs))
-    )  
+      .then(blogs =>
+        setBlogs(blogs.sort(sortBlogs))
+      )
   }, [])
 
   useEffect(() => {
@@ -45,11 +45,11 @@ const App = () => {
     <div>
       <Notification message={notificationMessage} />
       {user === null
-      ? <Login setUser={setUser} setNotificationMessage={setNotificationMessage} />
-      : <div>
+        ? <Login setUser={setUser} setNotificationMessage={setNotificationMessage} />
+        : <div>
           <div>
             <h2>Blogs</h2>
-            <p style={{fontStyle: 'italic'}}>{user.name} logged in </p>
+            <p style={{ fontStyle: 'italic' }}>{user.name} logged in </p>
             <Logout setUser={setUser} />
           </div>
           <div>

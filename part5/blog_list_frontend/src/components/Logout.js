@@ -1,5 +1,6 @@
-const Logout = ({setUser}) => {
+const Logout = ({ setUser }) => {
 
+  // eslint-disable-next-line no-unused-vars
   const handleLogout = (event) => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)

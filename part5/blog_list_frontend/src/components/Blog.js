@@ -1,10 +1,10 @@
-import { useState } from "react"
+import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({blog, setNotificationMessage, blogs, setBlogs}) => {
+const Blog = ({ blog, setNotificationMessage, blogs, setBlogs }) => {
 
   const [visible, setVisible] = useState('false')
-  const showWhenVisible = { 
+  const showWhenVisible = {
     display: visible ? 'none' : '' ,
     paddingTop: 10,
     paddingLeft: 2,
@@ -29,7 +29,7 @@ const Blog = ({blog, setNotificationMessage, blogs, setBlogs}) => {
       }
 
       const returnedBlog = await blogService.update(blog.id, updatedBlog)
-      
+
       //Update blog list with new like
       setBlogs(blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog))
 
@@ -41,7 +41,7 @@ const Blog = ({blog, setNotificationMessage, blogs, setBlogs}) => {
       setTimeout(() => {
         setNotificationMessage({
           message: null,
-          color: 'white'})
+          color: 'white' })
       }, 5000)
     }
   }
@@ -63,7 +63,7 @@ const Blog = ({blog, setNotificationMessage, blogs, setBlogs}) => {
       setTimeout(() => {
         setNotificationMessage({
           message: null,
-          color: 'white'})
+          color: 'white' })
       }, 5000)
     }
   }
@@ -80,7 +80,7 @@ const Blog = ({blog, setNotificationMessage, blogs, setBlogs}) => {
         <p>{blog.author}</p>
         <button onClick={handleDelete}>Remove</button>
       </div>
-    </div>  
+    </div>
   )
 }
 
