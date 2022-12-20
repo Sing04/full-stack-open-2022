@@ -30,9 +30,32 @@ const Blog = ({blog, setNotificationMessage, blogs, setBlogs}) => {
 
       const returnedBlog = await blogService.update(blog.id, updatedBlog)
       
-      setBlogs(blogs.map(blog => blog.id !== returnedBlog.id ? blog : returnedBlog))
+      //Update blog list with new like
+      setBlogs(blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog))
 
     } catch(error){
+      setNotificationMessage({
+        message: error.response.data.error,
+        color: 'red'
+      })
+      setTimeout(() => {
+        setNotificationMessage({
+          message: null,
+          color: 'white'})
+      }, 5000)
+    }
+  }
+
+  const handleDelete = async () => {
+    try {
+      const confirmDeletion = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
+
+      if (confirmDeletion) {
+        await blogService.remove(blog.id)
+        //Remove deleted blog from blog list
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+      }
+    } catch (error) {
       setNotificationMessage({
         message: error.response.data.error,
         color: 'red'
@@ -55,6 +78,7 @@ const Blog = ({blog, setNotificationMessage, blogs, setBlogs}) => {
         <p>{blog.url}</p>
         likes {blog.likes} <button onClick={handleLike}>Like</button>
         <p>{blog.author}</p>
+        <button onClick={handleDelete}>Remove</button>
       </div>
     </div>  
   )
