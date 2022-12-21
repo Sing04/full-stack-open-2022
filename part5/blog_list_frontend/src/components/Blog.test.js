@@ -4,7 +4,6 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
-
 describe('Blog rendering', () => {
 
   let container
@@ -23,8 +22,6 @@ describe('Blog rendering', () => {
 
   test('default setting renders blog title and author only', () => {
 
-    screen.debug()
-
     const titleAuthorElement = screen.getByText('First Blog Render Tests Harry Potter')
     expect(titleAuthorElement).toBeDefined()
 
@@ -36,6 +33,7 @@ describe('Blog rendering', () => {
   })
 
   test('complete blog info shown when show button is clicked', async () => {
+
     const user = userEvent.setup()
     const button = container.querySelector('.viewBlogDetails')
     await user.click(button)
@@ -46,5 +44,30 @@ describe('Blog rendering', () => {
     const completeBlog = container.querySelector('.completeBlog')
     expect(completeBlog).not.toHaveStyle('display: none')
   })
+
+  test('like button functionality', async () => {
+    const handleLike = jest.fn()
+    const user = userEvent.setup()
+
+    const blog = {
+      user: '6398e01fccbcd218c8984d11',
+      likes: 33,
+      author: 'Harry Potter',
+      title: 'First Blog Render Tests',
+      url: 'https://www.google.com/'
+    }
+
+    const container = render(<Blog blog={blog} handleLike={handleLike} />).container
+    const likeButton = container.querySelector('.likeButton')
+
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(handleLike.mock.calls).toHaveLength(2)
+  })
 })
+
+
+
+
 

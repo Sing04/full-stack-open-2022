@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
+import BlogButton from './BlogButton'
 
-const Blog = ({ blog, setNotificationMessage, blogs, setBlogs }) => {
+const Blog = ({ blog, handleLike, handleDelete }) => {
 
   const [visible, setVisible] = useState('false')
   const showWhenVisible = {
@@ -12,73 +12,28 @@ const Blog = ({ blog, setNotificationMessage, blogs, setBlogs }) => {
     borderWidth: 1,
     marginBottom: 5
   }
-  const hideWhenVisible = { display: visible ? '' : 'none' }
+  const hideWhenVisible = {
+    display: visible ? '' : 'none',
+    marginTop: 10,
+    marginBottom: 10
+  }
 
   const toggleVisibility = () => {
     setVisible(!visible)
   }
 
-  const handleLike = async () => {
-    try {
-      const updatedBlog = {
-        user: blog.user,
-        likes: blog.likes + 1,
-        author: blog.author,
-        title: blog.title,
-        url: blog.url
-      }
-
-      const returnedBlog = await blogService.update(blog.id, updatedBlog)
-
-      //Update blog list with new like
-      setBlogs(blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog))
-
-    } catch(error){
-      setNotificationMessage({
-        message: error.response.data.error,
-        color: 'red'
-      })
-      setTimeout(() => {
-        setNotificationMessage({
-          message: null,
-          color: 'white' })
-      }, 5000)
-    }
-  }
-
-  const handleDelete = async () => {
-    try {
-      const confirmDeletion = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
-
-      if (confirmDeletion) {
-        await blogService.remove(blog.id)
-        //Remove deleted blog from blog list
-        setBlogs(blogs.filter(b => b.id !== blog.id))
-      }
-    } catch (error) {
-      setNotificationMessage({
-        message: error.response.data.error,
-        color: 'red'
-      })
-      setTimeout(() => {
-        setNotificationMessage({
-          message: null,
-          color: 'white' })
-      }, 5000)
-    }
-  }
-
   return (
     <div>
       <div style={hideWhenVisible} className='leanBlog'>
-        {blog.title} {blog.author} <button onClick={toggleVisibility} className='viewBlogDetails'>View</button>
+        <div>`${blog.title} ${blog.author}`</div>
+        <BlogButton handleClick={toggleVisibility} className='viewBlogDetails' buttonText='View' />
       </div>
       <div style={showWhenVisible} className='completeBlog'>
-        {blog.title} {blog.author} <button onClick={toggleVisibility}>Hide</button>
-        <p>{blog.url}</p>
-        likes {blog.likes} <button onClick={handleLike}>Like</button>
-        <p>{blog.author}</p>
-        <button onClick={handleDelete}>Remove</button>
+        <div>{blog.title} {blog.author} <BlogButton handleClick={toggleVisibility} className='hideButton' buttonText='Hide' /></div>
+        <div>{blog.url}</div>
+        <div>`likes ${blog.likes}` <BlogButton handleClick={() => handleLike(blog)} className='likeButton' buttonText='Like' /></div>
+        <div>{blog.author}</div>
+        <BlogButton handleClick={() => handleDelete(blog)} className='removeButton' buttonText='Remove' />
       </div>
     </div>
   )
