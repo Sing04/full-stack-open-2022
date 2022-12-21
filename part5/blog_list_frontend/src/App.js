@@ -41,6 +41,35 @@ const App = () => {
     }
   }, [])
 
+  const handleNewBlog = async (newBlogObject) => {
+
+    try {
+      const blog = await blogService.create(newBlogObject)
+      setBlogs(blogs.concat(blog))
+
+      setNotificationMessage({
+        message: `A new blog ${blog.title} by ${blog.author} added!`,
+        color: 'green'
+      })
+      setTimeout(() => {
+        setNotificationMessage({
+          message: null,
+          color: 'white' })
+      }, 5000)
+
+    } catch (error) {
+      setNotificationMessage({
+        message: error.response.data.error,
+        color: 'red'
+      })
+      setTimeout(() => {
+        setNotificationMessage({
+          message: null,
+          color: 'white' })
+      }, 5000)
+    }
+  }
+
   const handleLike = async (blog) => {
     try {
       const updatedBlog = {
@@ -104,7 +133,7 @@ const App = () => {
           </div>
           <div>
             <Toggable buttonLabel='New Blog'>
-              <NewBlogForm blogs={blogs} setBlogs={setBlogs} setNotificationMessage={setNotificationMessage} />
+              <NewBlogForm createNewBlog={handleNewBlog} />
             </Toggable>
           </div>
           <div>

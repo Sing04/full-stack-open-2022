@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
-const NewBlogForm = ({ blogs, setBlogs, setNotificationMessage }) => {
+const NewBlogForm = ({ createNewBlog }) => {
 
   const newBlogFormStyle = {
     marginBottom: 15
@@ -15,43 +14,20 @@ const NewBlogForm = ({ blogs, setBlogs, setNotificationMessage }) => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const handleNewBlog = async (event) => {
+  const handleNewBlog =  (event) => {
     event.preventDefault()
 
-    try {
-      const newBlogObject = {
-        title: title,
-        author: author,
-        url: url
-      }
-      const blog = await blogService.create(newBlogObject)
-
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-      setBlogs(blogs.concat(blog))
-
-      setNotificationMessage({
-        message: `A new blog ${blog.title} by ${blog.author} added!`,
-        color: 'green'
-      })
-      setTimeout(() => {
-        setNotificationMessage({
-          message: null,
-          color: 'white' })
-      }, 5000)
-
-    } catch (error) {
-      setNotificationMessage({
-        message: error.response.data.error,
-        color: 'red'
-      })
-      setTimeout(() => {
-        setNotificationMessage({
-          message: null,
-          color: 'white' })
-      }, 5000)
+    const newBlogObject = {
+      title: title,
+      author: author,
+      url: url
     }
+
+    createNewBlog(newBlogObject)
+
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   return(
@@ -60,15 +36,15 @@ const NewBlogForm = ({ blogs, setBlogs, setNotificationMessage }) => {
       <form onSubmit={handleNewBlog} style={newBlogFormStyle}>
         <div>
           title:
-          <input type="text" value={title} name="Username" onChange={({ target }) => setTitle(target.value)} />
+          <input type="text" value={title} name="Title" onChange={({ target }) => setTitle(target.value)} placeholder='Enter blog title'/>
         </div>
         <div>
           author:
-          <input type="text" value={author} name="Username" onChange={({ target }) => setAuthor(target.value)} />
+          <input type="text" value={author} name="Author" onChange={({ target }) => setAuthor(target.value)} placeholder='Enter blog author'/>
         </div>
         <div>
           url:
-          <input type="text" value={url} name="Username" onChange={({ target }) => setUrl(target.value)} />
+          <input type="text" value={url} name="Url" onChange={({ target }) => setUrl(target.value)} placeholder='Enter blog URL'/>
         </div>
         <div>
           <button style={buttonStyle} type="submit">Create</button>
