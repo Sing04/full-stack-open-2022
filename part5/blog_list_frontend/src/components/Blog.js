@@ -71,7 +71,7 @@ const Blog = ({ blog, setNotificationMessage, blogs, setBlogs }) => {
   return (
     <div>
       <div style={hideWhenVisible} className='leanBlog'>
-        {blog.title} {blog.author} <button onClick={toggleVisibility}>View</button>
+        {blog.title} {blog.author} <button onClick={toggleVisibility} className='viewBlogDetails'>View</button>
       </div>
       <div style={showWhenVisible} className='completeBlog'>
         {blog.title} {blog.author} <button onClick={toggleVisibility}>Hide</button>
