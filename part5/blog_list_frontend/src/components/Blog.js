@@ -70,10 +70,10 @@ const Blog = ({ blog, setNotificationMessage, blogs, setBlogs }) => {
 
   return (
     <div>
-      <div style={hideWhenVisible}>
+      <div style={hideWhenVisible} className='leanBlog'>
         {blog.title} {blog.author} <button onClick={toggleVisibility}>View</button>
       </div>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className='completeBlog'>
         {blog.title} {blog.author} <button onClick={toggleVisibility}>Hide</button>
         <p>{blog.url}</p>
         likes {blog.likes} <button onClick={handleLike}>Like</button>
