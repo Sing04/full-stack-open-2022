@@ -25,14 +25,13 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
   return (
     <div>
       <div style={hideWhenVisible} className='leanBlog'>
-        <div>{blog.title} {blog.author}</div>
-        <BlogButton handleClick={toggleVisibility} className='viewBlogDetails' buttonText='View' />
+        {blog.title} {blog.author} <BlogButton handleClick={toggleVisibility} className='viewBlogDetails' buttonText='View' />
       </div>
       <div style={showWhenVisible} className='completeBlog'>
-        <div>{blog.title} {blog.author} <BlogButton handleClick={toggleVisibility} className='hideButton' buttonText='Hide' /></div>
-        <div>{blog.url}</div>
-        <div>`likes ${blog.likes}` <BlogButton handleClick={() => handleLike(blog)} className='likeButton' buttonText='Like' /></div>
-        <div>{blog.author}</div>
+        <p>{blog.title} {blog.author} <BlogButton handleClick={toggleVisibility} className='hideButton' buttonText='Hide' /></p>
+        <p>{blog.url}</p>
+        <p>likes {blog.likes} <BlogButton handleClick={() => handleLike(blog)} className='likeButton' buttonText='Like' /></p>
+        <p>{blog.author}</p>
         <BlogButton handleClick={() => handleDelete(blog)} className='removeButton' buttonText='Remove' />
       </div>
     </div>

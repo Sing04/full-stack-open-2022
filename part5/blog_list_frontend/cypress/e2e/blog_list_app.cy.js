@@ -84,5 +84,26 @@ describe('Blog app', function() {
         .should('contain', 'Must provide a title')
         .and('have.css', 'color', 'rgb(255, 0, 0)')
     })
+    describe('and several blogs exist', function() {
+      beforeEach(function() {
+        cy.createBlog({ title: 'first blog', author: 'Severus Snape', url: 'www.google.com'})
+        cy.createBlog({ title: 'second blog', author: 'Hermione Granger', url: 'www.google.com'})
+        cy.createBlog({ title: 'third blog', author: 'Dobey', url: 'www.google.com'})
+      })
+      it.only('User can like one blog', function() {
+        cy.contains('second blog Hermione Granger')
+          .parent()
+          .as('parentDiv')
+          .contains('View')
+          .click()
+        
+        cy.get('@parentDiv')
+          .contains('Like')
+          .click()
+        
+        cy.get('@parentDiv')
+          .should('contain', 'likes 1')
+      })
+    })
   })
 })
