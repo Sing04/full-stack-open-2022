@@ -90,7 +90,7 @@ describe('Blog app', function() {
         cy.createBlog({ title: 'second blog', author: 'Hermione Granger', url: 'www.google.com'})
         cy.createBlog({ title: 'third blog', author: 'Dobey', url: 'www.google.com'})
       })
-      it.only('User can like one blog', function() {
+      it('User can like one blog', function() {
         cy.contains('second blog Hermione Granger')
           .parent()
           .as('parentDiv')
@@ -104,6 +104,44 @@ describe('Blog app', function() {
         cy.get('@parentDiv')
           .should('contain', 'likes 1')
       })
-    })
+      it('User who create the blog can delete it', function() {
+        cy.viewBlog({ title: 'second blog' })
+
+        cy.get('@parent')
+          .contains('Remove')
+          .click()
+  
+        cy.get('html').should('not.contain', 'second blog Hermione Granger')
+      })
+      describe('create a second user', function() {
+        beforeEach(function() {
+          const user = {
+            username: 'Ron',
+            name: 'Ron Weasley',
+            password: 'password'
+          }
+          cy.request('POST', 'http://localhost:3003/api/users', user)
+          cy.visit('http://localhost:3000')
+
+          //Logout current user
+          cy.contains('Logout').click()
+
+          //Sign in new user
+          cy.login({ username: 'Ron', password: 'password'})
+        })
+        it.only('Blog cannot be deleted by other user', function() {
+          cy.viewBlog({ title: 'second blog' })
+
+        cy.get('@parent')
+          .contains('Remove')
+          .click()
+  
+        cy.get('html').should('contain', 'second blog Hermione Granger')
+        cy.get('.notification')
+        .should('contain', 'deletion of blog not authorized')
+        .and('have.css', 'color', 'rgb(255, 0, 0)')
+        })
+      })
+    })  
   })
 })
