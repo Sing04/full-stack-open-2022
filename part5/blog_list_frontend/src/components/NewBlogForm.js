@@ -36,18 +36,18 @@ const NewBlogForm = ({ createNewBlog }) => {
       <form onSubmit={handleNewBlog} style={newBlogFormStyle}>
         <div>
           title:
-          <input type="text" value={title} name="Title" onChange={({ target }) => setTitle(target.value)} placeholder='Enter blog title'/>
+          <input id='blog-title' type="text" value={title} name="Title" onChange={({ target }) => setTitle(target.value)} placeholder='Enter blog title'/>
         </div>
         <div>
           author:
-          <input type="text" value={author} name="Author" onChange={({ target }) => setAuthor(target.value)} placeholder='Enter blog author'/>
+          <input id='blog-author' type="text" value={author} name="Author" onChange={({ target }) => setAuthor(target.value)} placeholder='Enter blog author'/>
         </div>
         <div>
           url:
-          <input type="text" value={url} name="Url" onChange={({ target }) => setUrl(target.value)} placeholder='Enter blog URL'/>
+          <input id='blog-url' type="text" value={url} name="Url" onChange={({ target }) => setUrl(target.value)} placeholder='Enter blog URL'/>
         </div>
         <div>
-          <button style={buttonStyle} type="submit">Create</button>
+          <button id='create-blog' style={buttonStyle} type="submit">Create</button>
         </div>
       </form>
     </div>
