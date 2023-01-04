@@ -4,10 +4,10 @@ GET http://localhost:3003/api/blogs
 
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlNuYXBlIiwiaWQiOiI2MzlhMjRjZTAyNzE5M2MxYjVhZDAzZTMiLCJpYXQiOjE2NzEwNTEwNTksImV4cCI6MTY3MTA1NDY1OX0.UNl1dG80WrD3f7KaaX-Sh9U8OcktQY1PdOcix8epjL8
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJvbiIsImlkIjoiNjM5OGUwMWZjY2JjZDIxOGM4OTg0ZDExIiwiaWF0IjoxNjcxNDY1Mzg3LCJleHAiOjE2NzE0Njg5ODd9.c_zKvxX1YT6hJmN70zQY5tr1TmzTqoN_3jc1CBRBli4
 
 {
-  "title": "Token Authentication with UserExtractor",
+  "title": "Blog authentication header check",
   "author": "Harry Potter",
   "url": "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
   "likes": 5
@@ -15,8 +15,8 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlNuY
 
 ###
 
-DELETE http://localhost:3003/api/blogs/639a404c387319e878807e7a
-Authorization: bearer 
+DELETE http://localhost:3003/api/blogs/639760e52cee1fc1bbb34840
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJvbiIsImlkIjoiNjM5OGUwMWZjY2JjZDIxOGM4OTg0ZDExIiwiaWF0IjoxNjcxNDY1Mzg3LCJleHAiOjE2NzE0Njg5ODd9.c_zKvxX1YT6hJmN70zQY5tr1TmzTqoN_3jc1CBRBli4
 
 
 ###

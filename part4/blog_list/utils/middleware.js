@@ -29,12 +29,14 @@ const errorHandler = (error, request, response, next) => {
       error: 'token expired'
     })
   }
+
+  logger.error(error.message)
   
   next(error)
 }
 
 const userExtractor = (request, response, next) => {
-  const authorization = request.get('authorization')
+  const authorization = request.get('Authorization')
   const token = authorization && authorization.toLowerCase().startsWith('bearer ')
     ? authorization.substring(7)
     : null
@@ -50,9 +52,6 @@ const userExtractor = (request, response, next) => {
 
   next()
 }
-
-
-
 
 module.exports = {
   requestLogger,
