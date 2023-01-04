@@ -130,9 +130,9 @@ describe('Blog app', function() {
           cy.login({ username: 'Ron', password: 'password'})
         })
         it.only('Blog cannot be deleted by other user', function() {
-          cy.viewBlog({ title: 'second blog' })
+          cy.viewBlog({ title: 'second blog', divElement: 'secondBlog' })
 
-        cy.get('@parent')
+        cy.get('@secondBlog')
           .contains('Remove')
           .click()
   
@@ -141,6 +141,24 @@ describe('Blog app', function() {
         .should('contain', 'deletion of blog not authorized')
         .and('have.css', 'color', 'rgb(255, 0, 0)')
         })
+      })
+      it.only('blogs are ordered according to likes', function() {
+        cy.viewBlog({ title: 'first blog', divElement: 'firstBlog' })
+        cy.likeBlog({ divElement: 'firstBlog' })
+          .get('@firstBlog')
+          .should('contain', 'likes 1')
+
+        cy.viewBlog({ title: 'second blog', divElement: 'secondBlog'})
+        cy.likeBlog({ divElement: 'secondBlog' })
+          .get('@secondBlog')
+          .should('contain', 'likes 1')
+        
+        cy.likeBlog({ divElement: 'secondBlog' })
+          .get('@secondBlog')
+          .should('contain', 'likes 2')
+
+        cy.get('.blog').eq(0).should('contain', 'second blog')
+        cy.get('.blog').eq(1).should('contain', 'first blog')
       })
     })  
   })

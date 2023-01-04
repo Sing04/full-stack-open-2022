@@ -70,12 +70,14 @@ blogRouter.put('/:id', middleware.userExtractor, async (request, response) => {
       error: 'update of blog not authorized'
     })
   }
-  
+
   const updatedBlog = await Blog.findByIdAndUpdate(
-    request.params.id,
-    {likes: body.likes},
+    request.params.id, 
+    {likes: body.likes}, 
     {new: true}
-  )
+  ).populate('user', { username: 1, name: 1, id: 1})
+
+  console.log(updatedBlog)
 
   response.status(200).json(updatedBlog)
 })

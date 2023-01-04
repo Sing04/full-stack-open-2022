@@ -72,18 +72,13 @@ const App = () => {
 
   const handleLike = async (blog) => {
     try {
-      const updatedBlog = {
-        user: blog.user,
-        likes: blog.likes + 1,
-        author: blog.author,
-        title: blog.title,
-        url: blog.url
-      }
+
+      const updatedBlog = { ...blog, likes: blog.likes + 1 }
 
       const returnedBlog = await blogService.update(blog.id, updatedBlog)
 
       //Update blog list with new like
-      setBlogs(blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog))
+      setBlogs((blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog)).sort(sortBlogs))
 
     } catch(error){
       setNotificationMessage({

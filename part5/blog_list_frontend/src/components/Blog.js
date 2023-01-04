@@ -23,7 +23,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
   }
 
   return (
-    <div>
+    <div className='blog'>
       <div style={hideWhenVisible} className='leanBlog'>
         {blog.title} {blog.author} <BlogButton handleClick={toggleVisibility} className='viewBlogDetails' buttonText='View' />
       </div>
