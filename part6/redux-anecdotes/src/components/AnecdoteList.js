@@ -5,7 +5,14 @@ import Anecdote from './Anecdote'
 
 const AnecdoteList = () => {
 
-  const anecdotes = useSelector(state => state.anecdotes)
+  const anecdotes = useSelector(({ anecdotes, filters }) => {
+    if (filters === '' ) {
+      return anecdotes
+    } else {
+      return anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filters.toLowerCase()))
+    }
+  })
+
   const sortedAnecdotes = [...anecdotes].sort(function(a, b) {
     if (a.votes > b.votes) {
       return -1
