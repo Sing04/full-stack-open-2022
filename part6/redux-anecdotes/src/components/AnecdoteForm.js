@@ -10,6 +10,10 @@ const AnecdoteForm = (props) => {
     event.target.anecdote.value = ''
     props.createAnecdote(content)
     props.setNotification(`You created '${content}'`, 5)
+    const timeoutId = props.notifications.timeoutId
+    if ( timeoutId !== undefined){
+      clearTimeout(timeoutId)
+    }
   }
 
   return (
@@ -24,7 +28,9 @@ const AnecdoteForm = (props) => {
 }
 
 const mapStateToProps = (state) => {
-  return state
+  return {
+    notifications: state.notifications
+  }
 }
 const mapDispatchToProps = {
   createAnecdote,

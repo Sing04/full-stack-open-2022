@@ -10,6 +10,10 @@ const AnecdoteList = (props) => {
     const anecdoteVoted = props.anecdotes.find(anecdote => anecdote.id === id)
     props.newVote(id, {...anecdoteVoted, votes: anecdoteVoted.votes + 1})
     props.setNotification(`You voted '${anecdoteVoted.content}'`, 5)
+    const timeoutId = props.notifications.timeoutId
+    if ( timeoutId !== undefined){
+      clearTimeout(timeoutId)
+    }
   }
 
   return (
@@ -38,11 +42,13 @@ const AnecdoteList = (props) => {
 const mapStateToProps = (state) => {
   if (state.filters === '' ) {
     return {
-      anecdotes: state.anecdotes
+      anecdotes: state.anecdotes,
+      notifications: state.notifications
     }
   } else {
     return {
-      anecdotes: state.anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(state.filters.toLowerCase()))
+      anecdotes: state.anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(state.filters.toLowerCase())),
+      notifications: state.notifications
     }
   }
 }
