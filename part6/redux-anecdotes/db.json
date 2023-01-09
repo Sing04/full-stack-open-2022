@@ -34,6 +34,21 @@
       "content": "This is a new anecdote",
       "votes": 0,
       "id": "7u-kVSA"
+    },
+    {
+      "content": "This is another new anecdote",
+      "votes": 0,
+      "id": "8G8avpd"
+    },
+    {
+      "content": "This is a test",
+      "votes": 0,
+      "id": "4wxijj8"
+    },
+    {
+      "content": "this is another test",
+      "votes": 0,
+      "id": "AH4iZwS"
     }
   ]
 }
