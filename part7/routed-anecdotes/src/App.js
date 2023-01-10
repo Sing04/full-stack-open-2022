@@ -69,9 +69,9 @@ const Footer = () => (
 
 const CreateNew = (props) => {
   const navigate = useNavigate()
-  const content = useField('text', 'content')
-  const author = useField('text', 'author')
-  const info = useField('text', 'info')
+  const { reset: resetContent, ...content } = useField('text', 'content')
+  const { reset: resetAuthor, ...author } = useField('text', 'author')
+  const { reset: resetInfo, ...info } = useField('text', 'info')
 
 
   const handleSubmit = (e) => {
@@ -108,9 +108,9 @@ const CreateNew = (props) => {
           <button>create</button>
         </form>
         <button onClick = {() => {
-          content.reset()
-          author.reset()
-          info.reset()
+          resetContent()
+          resetAuthor()
+          resetInfo()
         }}>reset</button>
     </div>
   )
