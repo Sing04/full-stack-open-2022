@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import Blog from './components/Blog'
 import Login from './components/Login'
 import Logout from './components/Logout'
@@ -6,14 +7,12 @@ import Toggable from './components/Toggable'
 import Notification from './components/Notification'
 import NewBlogForm from './components/NewBlogForm'
 import blogService from './services/blogs'
+import { createNotification } from './reducers/notificationReducer'
 
 const App = () => {
+  const dispatch = useDispatch()
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [notificationMessage, setNotificationMessage] = useState({
-    message: null,
-    color: 'white'
-  })
 
   const sortBlogs = (blog1, blog2) => {
     if (blog1.likes < blog2.likes) {
@@ -46,27 +45,11 @@ const App = () => {
     try {
       const blog = await blogService.create(newBlogObject)
       setBlogs(blogs.concat(blog))
+      dispatch(createNotification(`A new blog ${blog.title} by ${blog.author} added!`, 'green', 5))
 
-      setNotificationMessage({
-        message: `A new blog ${blog.title} by ${blog.author} added!`,
-        color: 'green'
-      })
-      setTimeout(() => {
-        setNotificationMessage({
-          message: null,
-          color: 'white' })
-      }, 5000)
 
     } catch (error) {
-      setNotificationMessage({
-        message: error.response.data.error,
-        color: 'red'
-      })
-      setTimeout(() => {
-        setNotificationMessage({
-          message: null,
-          color: 'white' })
-      }, 5000)
+      dispatch(createNotification(error.response.data.error, 'red', 5))
     }
   }
 
@@ -79,17 +62,11 @@ const App = () => {
 
       //Update blog list with new like
       setBlogs((blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog)).sort(sortBlogs))
+      dispatch(createNotification(`You liked: ${blog.title} by ${blog.author}!`, 'green', 5))
 
     } catch(error){
-      setNotificationMessage({
-        message: error,
-        color: 'red'
-      })
-      setTimeout(() => {
-        setNotificationMessage({
-          message: null,
-          color: 'white' })
-      }, 5000)
+      console.log(error)
+      dispatch(createNotification(error.response.data.error, 'red', 5))
     }
   }
 
@@ -103,23 +80,15 @@ const App = () => {
         setBlogs(blogs.filter(b => b.id !== blog.id))
       }
     } catch (error) {
-      setNotificationMessage({
-        message: error.response.data.error,
-        color: 'red'
-      })
-      setTimeout(() => {
-        setNotificationMessage({
-          message: null,
-          color: 'white' })
-      }, 5000)
+      dispatch(createNotification(error.response.data.error, 'red', 5))
     }
   }
 
   return (
     <div>
-      <Notification message={notificationMessage} />
+      <Notification />
       {user === null
-        ? <Login setUser={setUser} setNotificationMessage={setNotificationMessage} />
+        ? <Login setUser={setUser} />
         : <div>
           <div>
             <h2>Blogs</h2>

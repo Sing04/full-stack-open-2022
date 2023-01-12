@@ -47,14 +47,8 @@ Cypress.Commands.add('createBlog', ({ title, author, url }) => {
 
 Cypress.Commands.add('viewBlog', ({ title, divElement }) => {
   cy.contains(title)
+    .contains('View')
     .parent()
     .as(divElement)
-    .contains('View')
-    .click()
-})
-
-Cypress.Commands.add('likeBlog', ({ divElement }) => {
-  cy.get(`@${divElement}`)
-    .contains('Like')
     .click()
 })

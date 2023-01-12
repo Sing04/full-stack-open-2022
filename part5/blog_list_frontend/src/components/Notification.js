@@ -1,5 +1,7 @@
-const Notification = (props) => {
-  const notification = props.message
+import { useSelector } from 'react-redux'
+
+const Notification = () => {
+  const notification = useSelector(state => state.notifications)
 
   const notificationStyle = {
     fontSize: 20,
