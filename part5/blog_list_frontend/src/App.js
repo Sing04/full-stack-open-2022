@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import Login from './components/Login'
 import Logout from './components/Logout'
@@ -8,10 +8,11 @@ import Notification from './components/Notification'
 import NewBlogForm from './components/NewBlogForm'
 import blogService from './services/blogs'
 import { createNotification } from './reducers/notificationReducer'
+import { addBlog, setBlogs } from './reducers/blogReducer'
 
 const App = () => {
   const dispatch = useDispatch()
-  const [blogs, setBlogs] = useState([])
+  const blogs = useSelector(state => state.blogs)
   const [user, setUser] = useState(null)
 
   const sortBlogs = (blog1, blog2) => {
@@ -27,7 +28,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll()
       .then(blogs =>
-        setBlogs(blogs.sort(sortBlogs))
+        dispatch(setBlogs(blogs.sort(sortBlogs)))
       )
   }, [])
 
@@ -44,7 +45,7 @@ const App = () => {
 
     try {
       const blog = await blogService.create(newBlogObject)
-      setBlogs(blogs.concat(blog))
+      dispatch(addBlog(blog))
       dispatch(createNotification(`A new blog ${blog.title} by ${blog.author} added!`, 'green', 5))
 
 
@@ -61,11 +62,10 @@ const App = () => {
       const returnedBlog = await blogService.update(blog.id, updatedBlog)
 
       //Update blog list with new like
-      setBlogs((blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog)).sort(sortBlogs))
+      dispatch(setBlogs((blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog)).sort(sortBlogs)))
       dispatch(createNotification(`You liked: ${blog.title} by ${blog.author}!`, 'green', 5))
 
     } catch(error){
-      console.log(error)
       dispatch(createNotification(error.response.data.error, 'red', 5))
     }
   }
@@ -77,7 +77,7 @@ const App = () => {
       if (confirmDeletion) {
         await blogService.remove(blog.id)
         //Remove deleted blog from blog list
-        setBlogs(blogs.filter(b => b.id !== blog.id))
+        dispatch(setBlogs(blogs.filter(b => b.id !== blog.id)))
       }
     } catch (error) {
       dispatch(createNotification(error.response.data.error, 'red', 5))

@@ -142,7 +142,7 @@ describe('Blog app', function() {
         .and('have.css', 'color', 'rgb(255, 0, 0)')
         })
       })
-      it.only('blogs are ordered according to likes', function() {
+      it('blogs are ordered according to likes', function() {
         cy.contains('first blog').contains('View').click()
         cy.get('.completeBlog').contains('first blog').parent().contains('Like').as('like_1')
 
@@ -151,7 +151,7 @@ describe('Blog app', function() {
 
         cy.get('@like_2').click()
         cy.contains(`You liked: second blog by Hermione Granger!`)
-        
+
         cy.get('@like_1').click()
         cy.contains(`You liked: first blog by Severus Snape!`)
 
