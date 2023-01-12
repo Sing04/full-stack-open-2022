@@ -1,6 +1,10 @@
 import { useField } from '../hooks'
+import { useDispatch } from 'react-redux'
+import { createBlog } from '../reducers/blogReducer'
+import { createNotification } from '../reducers/notificationReducer'
 
-const NewBlogForm = ({ createNewBlog }) => {
+const NewBlogForm = () => {
+  const dispatch = useDispatch()
   const { reset: resetTitle, ...title } = useField('text', 'title')
   const { reset: resetAuthor, ...author } = useField('text', 'author')
   const { reset: resetUrl, ...url } = useField('text', 'url')
@@ -15,14 +19,13 @@ const NewBlogForm = ({ createNewBlog }) => {
 
   const handleNewBlog =  (event) => {
     event.preventDefault()
-
-    const newBlogObject = {
+    const newBlog = {
       title: title.value,
       author: author.value,
       url: url.value
     }
-
-    createNewBlog(newBlogObject)
+    dispatch(createBlog(newBlog))
+    dispatch(createNotification(`A new blog ${newBlog.title} by ${newBlog.author} added!`, 'green', 5))
 
     resetTitle()
     resetAuthor()

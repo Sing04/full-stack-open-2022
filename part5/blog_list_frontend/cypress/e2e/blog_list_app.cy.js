@@ -105,11 +105,8 @@ describe('Blog app', function() {
           .should('contain', 'likes 1')
       })
       it('User who create the blog can delete it', function() {
-        cy.viewBlog({ title: 'second blog', divElement: 'secondBlog' })
-
-        cy.get('@secondBlog')
-          .contains('Remove')
-          .click()
+        cy.contains('second blog').contains('View').click()
+        cy.get('.completeBlog').contains('second blog').parent().contains('Remove').click()
   
         cy.get('html').should('not.contain', 'second blog Hermione Granger')
       })
@@ -130,16 +127,13 @@ describe('Blog app', function() {
           cy.login({ username: 'Ron', password: 'password'})
         })
         it('Blog cannot be deleted by other user', function() {
-          cy.viewBlog({ title: 'second blog', divElement: 'secondBlog' })
+          cy.contains('second blog').contains('View').click()
+          cy.get('.completeBlog').contains('second blog').parent().contains('Remove').click()
 
-        cy.get('@secondBlog')
-          .contains('Remove')
-          .click()
-  
-        cy.get('html').should('contain', 'second blog Hermione Granger')
-        cy.get('.notification')
-        .should('contain', 'deletion of blog not authorized')
-        .and('have.css', 'color', 'rgb(255, 0, 0)')
+          cy.get('html').should('contain', 'second blog Hermione Granger')
+          cy.get('.notification')
+          .should('contain', 'deletion of blog not authorized')
+          .and('have.css', 'color', 'rgb(255, 0, 0)')
         })
       })
       it('blogs are ordered according to likes', function() {

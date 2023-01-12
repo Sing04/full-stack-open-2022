@@ -62,22 +62,12 @@ blogRouter.delete('/:id', middleware.userExtractor, async (request, response) =>
 blogRouter.put('/:id', middleware.userExtractor, async (request, response) => {
 
   const body = request.body
-  const tokenUserId = request.user.id
-  const blogUserId = body.user.id
-
-  if (blogUserId.toString() !== tokenUserId.toString()) {
-    return response.status(401).json({
-      error: 'update of blog not authorized'
-    })
-  }
 
   const updatedBlog = await Blog.findByIdAndUpdate(
     request.params.id, 
     {likes: body.likes}, 
     {new: true}
   ).populate('user', { username: 1, name: 1, id: 1})
-
-  console.log(updatedBlog)
 
   response.status(200).json(updatedBlog)
 })
