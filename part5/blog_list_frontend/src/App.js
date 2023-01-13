@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import BlogList from './components/BlogList'
+import Blog from './components/Blog'
 import Login from './components/Login'
 import Notification from './components/Notification'
 import Users from './components/Users'
@@ -22,10 +23,16 @@ const App = () => {
   }, [])
 
   const users = useSelector(state => state.users)
+  const blogs = useSelector(state => state.blogs)
 
-  const match = useMatch('/users/:id')
-  const user = match
-    ? users.find(user => user.id === match.params.id)
+  const userMatch = useMatch('/users/:id')
+  const user = userMatch
+    ? users.find(user => user.id === userMatch.params.id)
+    : null
+
+  const blogMatch = useMatch('/blogs/:id')
+  const blog = blogMatch
+    ? blogs.find(user => user.id === blogMatch.params.id)
     : null
 
   const loginUser = useSelector(state => state.loginUser)
@@ -48,6 +55,7 @@ const App = () => {
       <Notification />
       <Routes>
         <Route path='/' element={<BlogList />} />
+        <Route path='/blogs/:id' element={<Blog blog={blog} /> } />
         <Route path='/users' element={<Users /> } />
         <Route path='/users/:id' element={ <User user={user} />} />
         <Route path='/login' element={<Login />} />

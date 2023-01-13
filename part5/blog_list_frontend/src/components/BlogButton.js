@@ -1,8 +1,8 @@
-
+import { Button } from 'react-bootstrap'
 const BlogButton = ({ handleClick, className, buttonText }) => {
 
   return (
-    <button onClick={handleClick} className={className}>{buttonText}</button>
+    <Button variant='outline-primary' size='sm' onClick={handleClick} className={className}>{buttonText}</Button>
   )
 }
 

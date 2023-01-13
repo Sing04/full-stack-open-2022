@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import Blog from './Blog'
 import Toggable from './Toggable'
 import NewBlogForm from './NewBlogForm'
 import { initializeBlogs } from '../reducers/blogReducer'
+import { Link } from 'react-router-dom'
 
 const BlogList = () => {
   const blogs = useSelector(state => state.blogs)
@@ -21,6 +21,14 @@ const BlogList = () => {
     marginBottom: 15
   }
 
+  const divStyle = {
+    paddingTop: 5,
+    paddingBottom: 5,
+    marginBottom: 5,
+    marginTop: 5,
+    border: '2px solid black'
+  }
+
   return (
     <div>
       <div>
@@ -33,7 +41,11 @@ const BlogList = () => {
       </div>
       <div>
         {sortedBlogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <div key={blog.id} style={divStyle}>
+            <Link to={`/blogs/${blog.id}`}>
+              {blog.title} {blog.author}
+            </Link>
+          </div>
         )}
       </div>
     </div>
