@@ -1,32 +1,31 @@
-import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import loginService from '../services/login'
-import blogService from '../services/blogs'
 import { createNotification } from '../reducers/notificationReducer'
+import { useField } from '../hooks'
+import { setUser } from '../reducers/userReducer'
 
-const Login = ({ setUser }) => {
+const Login = () => {
   const dispatch = useDispatch()
-  const [password, setPassword] = useState('')
-  const [username, setUsername] = useState('')
+  const { reset: resetUsername, ...username } = useField('text', 'username')
+  const { reset: resetPassword, ...password } = useField('password', 'password')
 
   const handleLogin = async (event) => {
     event.preventDefault()
 
     try {
       const user = await loginService.login({
-        username, password
+        username: username.value, password: password.value
       })
 
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
 
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
+      dispatch(setUser(user))
+      resetUsername('')
+      resetPassword('')
 
-    } catch (exception) {
+    } catch (error) {
       dispatch(createNotification('Wrong username or password', 'red', 5))
     }
   }
@@ -37,11 +36,11 @@ const Login = ({ setUser }) => {
       <form onSubmit={handleLogin}>
         <div>
           username:
-          <input type="text" id='username-input' value={username} name="Username" onChange={({ target }) => setUsername(target.value)} />
+          <input {...username} id='username-input' />
         </div>
         <div>
           password:
-          <input type="password" id='password-input' value={password} name="Password" onChange={({ target }) => setPassword(target.value)} />
+          <input {...password} id='password-input' />
         </div>
         <div>
           <button type="submit" id='login-button'>Login</button>

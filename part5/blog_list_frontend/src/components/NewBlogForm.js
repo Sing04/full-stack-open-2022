@@ -38,15 +38,15 @@ const NewBlogForm = () => {
       <form onSubmit={handleNewBlog} style={newBlogFormStyle}>
         <div>
           title:
-          <input {...title} />
+          <input {...title} id='blog-title' placeholder='Enter blog title' />
         </div>
         <div>
           author:
-          <input {...author} />
+          <input {...author} id='blog-author' placeholder='Enter blog author' />
         </div>
         <div>
           url:
-          <input {...url} />
+          <input {...url} id='blog-url' placeholder='Enter blog url' />
         </div>
         <div>
           <button id='create-blog' style={buttonStyle} type="submit">Create</button>
