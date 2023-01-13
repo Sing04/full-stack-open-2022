@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import blogService from '../services/blogs'
 
-const userSlice = createSlice({
-  name: 'users',
+const loginUserSlice = createSlice({
+  name: 'loginUser',
   initialState: null,
   reducers: {
     addUser(state, action) {
@@ -14,7 +14,7 @@ const userSlice = createSlice({
   }
 })
 
-export const { addUser, removeUser } = userSlice.actions
+export const { addUser, removeUser } = loginUserSlice.actions
 
 export const setUser = (user) => {
   return dispatch => {
@@ -23,4 +23,4 @@ export const setUser = (user) => {
   }
 }
 
-export default userSlice.reducer
+export default loginUserSlice.reducer

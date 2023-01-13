@@ -1,4 +1,4 @@
-import { removeUser } from '../reducers/userReducer'
+import { removeUser } from '../reducers/loginUserReducer'
 import { useDispatch } from 'react-redux'
 
 const Logout = () => {

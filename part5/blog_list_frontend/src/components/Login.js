@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux'
 import loginService from '../services/login'
 import { createNotification } from '../reducers/notificationReducer'
 import { useField } from '../hooks'
-import { setUser } from '../reducers/userReducer'
+import { setUser } from '../reducers/loginUserReducer'
 
 const Login = () => {
   const dispatch = useDispatch()

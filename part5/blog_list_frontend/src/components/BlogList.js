@@ -1,10 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import Blog from './Blog'
+import Toggable from './Toggable'
+import NewBlogForm from './NewBlogForm'
+import Logout from './Logout'
 import { initializeBlogs } from '../reducers/blogReducer'
 
 const BlogList = () => {
   const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.loginUser)
+
   const sortedBlogs = [...blogs].sort((b1, b2) => b2.likes - b1.likes)
 
   const dispatch = useDispatch()
@@ -13,11 +18,28 @@ const BlogList = () => {
     dispatch(initializeBlogs())
   }, [dispatch])
 
+  const header = {
+    marginTop: 30,
+    marginBottom: 15
+  }
+
   return (
     <div>
-      {sortedBlogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+      <div>
+        <h2 style={header}>Blogs</h2>
+        <p style={{ fontStyle: 'italic' }}>{user.name} logged in </p>
+        <Logout />
+      </div>
+      <div>
+        <Toggable buttonLabel='New Blog'>
+          <NewBlogForm />
+        </Toggable>
+      </div>
+      <div>
+        {sortedBlogs.map(blog =>
+          <Blog key={blog.id} blog={blog} />
+        )}
+      </div>
     </div>
   )
 }
