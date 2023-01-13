@@ -3,9 +3,12 @@ import loginService from '../services/login'
 import { createNotification } from '../reducers/notificationReducer'
 import { useField } from '../hooks'
 import { setUser } from '../reducers/loginUserReducer'
+import { useNavigate } from 'react-router-dom'
+import { Form, Button } from 'react-bootstrap'
 
 const Login = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { reset: resetUsername, ...username } = useField('text', 'username')
   const { reset: resetPassword, ...password } = useField('password', 'password')
 
@@ -24,28 +27,36 @@ const Login = () => {
       dispatch(setUser(user))
       resetUsername('')
       resetPassword('')
+      navigate('/')
 
     } catch (error) {
       dispatch(createNotification('Wrong username or password', 'red', 5))
     }
   }
 
+  const header = {
+    marginTop: 30,
+    marginBottom: 15
+  }
+
   return(
     <div>
-      <h1>Application Login</h1>
-      <form onSubmit={handleLogin}>
-        <div>
-          username:
-          <input {...username} id='username-input' />
-        </div>
-        <div>
-          password:
-          <input {...password} id='password-input' />
-        </div>
-        <div>
-          <button type="submit" id='login-button'>Login</button>
-        </div>
-      </form>
+      <h1 style={header}>Application Login</h1>
+      <Form onSubmit={handleLogin}>
+        <Form.Group>
+          <Form.Label>username:</Form.Label>
+          <Form.Control
+            {...username} id='username-input'
+          />
+          <Form.Label>password:</Form.Label>
+          <Form.Control
+            {...password} id='password-input'
+          />
+          <Button variant='primary' type="submit" id='login-button'>
+            Login
+          </Button>
+        </Form.Group>
+      </Form>
     </div>
   )
 }

@@ -5,6 +5,8 @@ import Notification from './components/Notification'
 import Users from './components/Users'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUser } from './reducers/loginUserReducer'
+import { Link, Routes, Route } from 'react-router-dom'
+import Logout from './components/Logout'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -19,16 +21,27 @@ const App = () => {
 
   const user = useSelector(state => state.loginUser)
 
+  const padding = {
+    paddingRight: 8
+  }
+
   return (
     <div className='container'>
+      <div>
+        {user &&
+          <div>
+            <Link style={padding} to='/'>Blogs</Link>
+            <Link style={padding} to='/users'>Users</Link>
+            <em style={{ fontStyle: 'italic' }}>{user.name} logged in </em> <Logout />
+          </div>
+        }
+      </div>
       <Notification />
-      {user === null
-        ?<Login />
-        :<div>
-          <BlogList />
-          <Users />
-        </div>
-      }
+      <Routes>
+        <Route path='/' element={<BlogList />} />
+        <Route path='/users' element={<Users /> } />
+        <Route path='/login' element={<Login />} />
+      </Routes>
     </div>
   )
 }

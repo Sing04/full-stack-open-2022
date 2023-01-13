@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { initializeUsers } from '../reducers/usersReducer'
 import { Table } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 const Users = () => {
   const users = useSelector(state => state.users)
@@ -38,7 +39,11 @@ const Users = () => {
           <tbody>
             {users.map(user =>
               <tr key={user.id}>
-                <td style={style}>{user.name}</td>
+                <td style={style}>
+                  <Link to={`/users/${user.id}`}>
+                    {user.name}
+                  </Link>
+                </td>
                 <td style={style}>{user.blogs.length}</td>
               </tr>)
             }
