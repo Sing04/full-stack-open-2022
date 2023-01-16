@@ -2,6 +2,8 @@ import { useField } from '../hooks'
 import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
 import { createNotification } from '../reducers/notificationReducer'
+import { Form, Button, InputGroup } from 'react-bootstrap'
+
 
 const NewBlogForm = () => {
   const dispatch = useDispatch()
@@ -14,7 +16,7 @@ const NewBlogForm = () => {
   }
 
   const buttonStyle = {
-    marginTop: 10
+    marginTop: 0
   }
 
   const handleNewBlog =  (event) => {
@@ -34,24 +36,22 @@ const NewBlogForm = () => {
 
   return(
     <div>
-      <h2>Create New Blog</h2>
-      <form onSubmit={handleNewBlog} style={newBlogFormStyle}>
-        <div>
-          title:
-          <input {...title} id='blog-title' placeholder='Enter blog title' />
-        </div>
-        <div>
-          author:
-          <input {...author} id='blog-author' placeholder='Enter blog author' />
-        </div>
-        <div>
-          url:
-          <input {...url} id='blog-url' placeholder='Enter blog url' />
-        </div>
-        <div>
-          <button id='create-blog' style={buttonStyle} type="submit">Create</button>
-        </div>
-      </form>
+      <h4 style={{ marginTop: 30 }}>Create New Blog</h4>
+      <Form onSubmit={handleNewBlog} style={newBlogFormStyle}>
+        <InputGroup className='mb-3'>
+          <InputGroup.Text>Title:</InputGroup.Text>
+          <Form.Control {...title} id='blog-title' placeholder='Enter blog title' />
+        </InputGroup>
+        <InputGroup className='mb-3'>
+          <InputGroup.Text>Author:</InputGroup.Text>
+          <Form.Control {...author} id='blog-author' placeholder='Enter blog author' />
+        </InputGroup>
+        <InputGroup className='mb-3'>
+          <InputGroup.Text>URL:</InputGroup.Text>
+          <Form.Control {...url} id='blog-url' placeholder='Enter blog url' />
+        </InputGroup>
+        <Button variant='outline-primary' id='create-blog' style={buttonStyle} type="submit">Create</Button>
+      </Form>
     </div>
   )
 }

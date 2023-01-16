@@ -8,8 +8,9 @@ const Notification = () => {
     color: notification.color,
     border: `2px solid ${notification.color}`,
     marginBottom: 10,
+    marginTop: 10,
     padding: 8,
-    backgroundColor: '#CCCCCC'
+    backgroundColor: '#f6f6f6'
   }
   if (notification.message === null){
     return <div></div>

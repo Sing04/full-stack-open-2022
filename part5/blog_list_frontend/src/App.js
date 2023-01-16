@@ -10,6 +10,7 @@ import { setUser } from './reducers/loginUserReducer'
 import { Link, Routes, Route } from 'react-router-dom'
 import Logout from './components/Logout'
 import { useMatch } from 'react-router-dom'
+import { Nav, Navbar, Container } from 'react-bootstrap'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -38,20 +39,30 @@ const App = () => {
   const loginUser = useSelector(state => state.loginUser)
 
   const padding = {
-    paddingRight: 8
+    paddingRight: 8,
+    textDecoration: 'none'
   }
 
   return (
     <div className='container'>
-      <div>
-        {loginUser &&
-          <div>
-            <Link style={padding} to='/'>Blogs</Link>
-            <Link style={padding} to='/users'>Users</Link>
-            <em style={{ fontStyle: 'italic' }}>{loginUser.name} logged in </em> <Logout />
-          </div>
-        }
-      </div>
+      <Navbar  expand='lg' bg='light' variant='light'>
+        <Container>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Brand href="http://localhost:3000/">Blog App</Navbar.Brand>
+          {loginUser &&
+            <Nav className="me-auto">
+              <Nav.Link href="#" as="span">
+                <Link style={padding} to='/'>Blogs</Link>
+              </Nav.Link>
+              <Nav.Link href="#" as="span">
+                <Link style={padding} to='/users'>Users</Link>
+              </Nav.Link>
+              <em style={{ fontStyle: 'italic', marginTop: 8 }}>{loginUser.name} logged in</em> <Logout />
+            </Nav>
+          }
+        </Container>
+      </Navbar>
+
       <Notification />
       <Routes>
         <Route path='/' element={<BlogList />} />

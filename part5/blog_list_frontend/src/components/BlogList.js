@@ -22,11 +22,10 @@ const BlogList = () => {
   }
 
   const divStyle = {
-    paddingTop: 5,
-    paddingBottom: 5,
+    padding: 5,
     marginBottom: 5,
     marginTop: 5,
-    border: '2px solid black'
+    border: '1px solid grey'
   }
 
   return (
@@ -42,7 +41,7 @@ const BlogList = () => {
       <div>
         {sortedBlogs.map(blog =>
           <div key={blog.id} style={divStyle}>
-            <Link to={`/blogs/${blog.id}`}>
+            <Link style={{ textDecoration: 'none' }}to={`/blogs/${blog.id}`}>
               {blog.title} {blog.author}
             </Link>
           </div>
