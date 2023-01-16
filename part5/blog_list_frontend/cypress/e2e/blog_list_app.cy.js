@@ -105,11 +105,8 @@ describe('Blog app', function() {
           .should('contain', 'likes 1')
       })
       it('User who create the blog can delete it', function() {
-        cy.viewBlog({ title: 'second blog' })
-
-        cy.get('@parent')
-          .contains('Remove')
-          .click()
+        cy.contains('second blog').contains('View').click()
+        cy.get('.completeBlog').contains('second blog').parent().contains('Remove').click()
   
         cy.get('html').should('not.contain', 'second blog Hermione Granger')
       })
@@ -129,36 +126,37 @@ describe('Blog app', function() {
           //Sign in new user
           cy.login({ username: 'Ron', password: 'password'})
         })
-        it.only('Blog cannot be deleted by other user', function() {
-          cy.viewBlog({ title: 'second blog', divElement: 'secondBlog' })
+        it('Blog cannot be deleted by other user', function() {
+          cy.contains('second blog').contains('View').click()
+          cy.get('.completeBlog').contains('second blog').parent().contains('Remove').click()
 
-        cy.get('@secondBlog')
-          .contains('Remove')
-          .click()
-  
-        cy.get('html').should('contain', 'second blog Hermione Granger')
-        cy.get('.notification')
-        .should('contain', 'deletion of blog not authorized')
-        .and('have.css', 'color', 'rgb(255, 0, 0)')
+          cy.get('html').should('contain', 'second blog Hermione Granger')
+          cy.get('.notification')
+          .should('contain', 'deletion of blog not authorized')
+          .and('have.css', 'color', 'rgb(255, 0, 0)')
         })
       })
-      it.only('blogs are ordered according to likes', function() {
-        cy.viewBlog({ title: 'first blog', divElement: 'firstBlog' })
-        cy.likeBlog({ divElement: 'firstBlog' })
-          .get('@firstBlog')
-          .should('contain', 'likes 1')
+      it('blogs are ordered according to likes', function() {
+        cy.contains('first blog').contains('View').click()
+        cy.get('.completeBlog').contains('first blog').parent().contains('Like').as('like_1')
 
-        cy.viewBlog({ title: 'second blog', divElement: 'secondBlog'})
-        cy.likeBlog({ divElement: 'secondBlog' })
-          .get('@secondBlog')
-          .should('contain', 'likes 1')
-        
-        cy.likeBlog({ divElement: 'secondBlog' })
-          .get('@secondBlog')
-          .should('contain', 'likes 2')
+        cy.contains('second blog').contains('View').click()
+        cy.get('.completeBlog').contains('second blog').parent().contains('Like').as('like_2')
 
-        cy.get('.blog').eq(0).should('contain', 'second blog')
-        cy.get('.blog').eq(1).should('contain', 'first blog')
+        cy.get('@like_2').click()
+        cy.contains(`You liked: second blog by Hermione Granger!`)
+
+        cy.get('@like_1').click()
+        cy.contains(`You liked: first blog by Severus Snape!`)
+
+        cy.get('@like_2').click()
+        cy.contains(`You liked: second blog by Hermione Granger!`)
+
+        cy.get('.blog').then((blogs) => {
+          expect(blogs.eq(0)).to.contain('second blog')
+          expect(blogs.eq(1)).to.contain('first blog')
+        })
+
       })
     })  
   })

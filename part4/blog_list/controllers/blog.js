@@ -30,9 +30,11 @@ blogRouter.post('/', middleware.userExtractor, async (request, response) => {
     const blog = blog_content.likes === undefined
       ? new Blog ({...blog_content,
         likes: 0,
+        comments: [],
         user: user._id
       })
       : new Blog({...blog_content,
+        comments: [],
         user: user._id
       })
 
@@ -41,6 +43,25 @@ blogRouter.post('/', middleware.userExtractor, async (request, response) => {
     await user.save()
     response.status(201).json(savedBlog)
   }
+})
+
+blogRouter.post('/:id/comments', async (request, response) => {
+
+  const body = request.body
+
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    request.params.id, 
+    {comments: body.comments}, 
+    {
+      new: true,
+      strict: false
+    }
+  ).populate('user', { username: 1, name: 1, id: 1})
+
+  await updatedBlog.save()
+
+  response.status(201).json(updatedBlog)
+
 })
 
 blogRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
@@ -62,22 +83,12 @@ blogRouter.delete('/:id', middleware.userExtractor, async (request, response) =>
 blogRouter.put('/:id', middleware.userExtractor, async (request, response) => {
 
   const body = request.body
-  const tokenUserId = request.user.id
-  const blogUserId = body.user.id
-
-  if (blogUserId.toString() !== tokenUserId.toString()) {
-    return response.status(401).json({
-      error: 'update of blog not authorized'
-    })
-  }
 
   const updatedBlog = await Blog.findByIdAndUpdate(
     request.params.id, 
     {likes: body.likes}, 
     {new: true}
   ).populate('user', { username: 1, name: 1, id: 1})
-
-  console.log(updatedBlog)
 
   response.status(200).json(updatedBlog)
 })

@@ -1,143 +1,76 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import BlogList from './components/BlogList'
 import Blog from './components/Blog'
 import Login from './components/Login'
-import Logout from './components/Logout'
-import Toggable from './components/Toggable'
 import Notification from './components/Notification'
-import NewBlogForm from './components/NewBlogForm'
-import blogService from './services/blogs'
+import Users from './components/Users'
+import User from './components/User'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUser } from './reducers/loginUserReducer'
+import { Link, Routes, Route } from 'react-router-dom'
+import Logout from './components/Logout'
+import { useMatch } from 'react-router-dom'
+import { Nav, Navbar, Container } from 'react-bootstrap'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
-  const [notificationMessage, setNotificationMessage] = useState({
-    message: null,
-    color: 'white'
-  })
-
-  const sortBlogs = (blog1, blog2) => {
-    if (blog1.likes < blog2.likes) {
-      return 1
-    } else if (blog1.likes > blog2.likes) {
-      return -1
-    } else {
-      return 0
-    }
-  }
-
-  useEffect(() => {
-    blogService.getAll()
-      .then(blogs =>
-        setBlogs(blogs.sort(sortBlogs))
-      )
-  }, [])
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+      dispatch(setUser(user))
     }
   }, [])
 
-  const handleNewBlog = async (newBlogObject) => {
+  const users = useSelector(state => state.users)
+  const blogs = useSelector(state => state.blogs)
 
-    try {
-      const blog = await blogService.create(newBlogObject)
-      setBlogs(blogs.concat(blog))
+  const userMatch = useMatch('/users/:id')
+  const user = userMatch
+    ? users.find(user => user.id === userMatch.params.id)
+    : null
 
-      setNotificationMessage({
-        message: `A new blog ${blog.title} by ${blog.author} added!`,
-        color: 'green'
-      })
-      setTimeout(() => {
-        setNotificationMessage({
-          message: null,
-          color: 'white' })
-      }, 5000)
+  const blogMatch = useMatch('/blogs/:id')
+  const blog = blogMatch
+    ? blogs.find(user => user.id === blogMatch.params.id)
+    : null
 
-    } catch (error) {
-      setNotificationMessage({
-        message: error.response.data.error,
-        color: 'red'
-      })
-      setTimeout(() => {
-        setNotificationMessage({
-          message: null,
-          color: 'white' })
-      }, 5000)
-    }
-  }
+  const loginUser = useSelector(state => state.loginUser)
 
-  const handleLike = async (blog) => {
-    try {
-
-      const updatedBlog = { ...blog, likes: blog.likes + 1 }
-
-      const returnedBlog = await blogService.update(blog.id, updatedBlog)
-
-      //Update blog list with new like
-      setBlogs((blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog)).sort(sortBlogs))
-
-    } catch(error){
-      setNotificationMessage({
-        message: error,
-        color: 'red'
-      })
-      setTimeout(() => {
-        setNotificationMessage({
-          message: null,
-          color: 'white' })
-      }, 5000)
-    }
-  }
-
-  const handleDelete = async (blog) => {
-    try {
-      const confirmDeletion = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
-
-      if (confirmDeletion) {
-        await blogService.remove(blog.id)
-        //Remove deleted blog from blog list
-        setBlogs(blogs.filter(b => b.id !== blog.id))
-      }
-    } catch (error) {
-      setNotificationMessage({
-        message: error.response.data.error,
-        color: 'red'
-      })
-      setTimeout(() => {
-        setNotificationMessage({
-          message: null,
-          color: 'white' })
-      }, 5000)
-    }
+  const padding = {
+    paddingRight: 8,
+    textDecoration: 'none'
   }
 
   return (
-    <div>
-      <Notification message={notificationMessage} />
-      {user === null
-        ? <Login setUser={setUser} setNotificationMessage={setNotificationMessage} />
-        : <div>
-          <div>
-            <h2>Blogs</h2>
-            <p style={{ fontStyle: 'italic' }}>{user.name} logged in </p>
-            <Logout setUser={setUser} />
-          </div>
-          <div>
-            <Toggable buttonLabel='New Blog'>
-              <NewBlogForm createNewBlog={handleNewBlog} />
-            </Toggable>
-          </div>
-          <div>
-            {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} handleLike={handleLike} handleDelete={handleDelete} />
-            )}
-          </div>
-        </div>
-      }
+    <div className='container'>
+      <Navbar  expand='lg' bg='light' variant='light'>
+        <Container>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Brand href="http://localhost:3000/">Blog App</Navbar.Brand>
+          {loginUser &&
+            <Nav className="me-auto">
+              <Nav.Link href="#" as="span">
+                <Link style={padding} to='/'>Blogs</Link>
+              </Nav.Link>
+              <Nav.Link href="#" as="span">
+                <Link style={padding} to='/users'>Users</Link>
+              </Nav.Link>
+              <em style={{ fontStyle: 'italic', marginTop: 8 }}>{loginUser.name} logged in</em> <Logout />
+            </Nav>
+          }
+        </Container>
+      </Navbar>
+
+      <Notification />
+      <Routes>
+        <Route path='/' element={<BlogList />} />
+        <Route path='/blogs/:id' element={<Blog blog={blog} /> } />
+        <Route path='/users' element={<Users /> } />
+        <Route path='/users/:id' element={ <User user={user} />} />
+        <Route path='/login' element={<Login />} />
+      </Routes>
     </div>
   )
 }

@@ -1,0 +1,51 @@
+{
+  "notes": [
+    {
+      "content": "custom-hooks are great",
+      "id": 1
+    },
+    {
+      "content": "the best featrure ever <3",
+      "id": 2
+    },
+    {
+      "content": "This is a new note",
+      "id": 3
+    },
+    {
+      "content": "This is another new note",
+      "id": 4
+    },
+    {
+      "content": "This is a third new note",
+      "id": 5
+    }
+  ],
+  "persons": [
+    {
+      "name": "mluukkai",
+      "number": "040-5483923",
+      "id": 1
+    },
+    {
+      "name": "kaltsoon",
+      "number": "045-2323456",
+      "id": 2
+    },
+    {
+      "name": "Harry Potter",
+      "number": "123-456-789",
+      "id": 3
+    },
+    {
+      "name": "Harry Potter",
+      "number": "123-456-789",
+      "id": 4
+    },
+    {
+      "name": "Harry Potter",
+      "number": "123-456-789",
+      "id": 5
+    }
+  ]
+}

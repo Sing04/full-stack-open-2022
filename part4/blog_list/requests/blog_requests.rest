@@ -26,3 +26,11 @@ Content-Type: application/json
 {
   "likes": 444
 }
+
+###
+POST http://localhost:3003/api/blogs/6398e12ce0bbcbe6495c7013/comments
+Content-Type: application/json
+
+{
+  "comments": "This is the second comment"
+}

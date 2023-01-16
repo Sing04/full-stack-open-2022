@@ -1,39 +1,75 @@
-import { useState } from 'react'
 import BlogButton from './BlogButton'
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteBlog, likeBlog, commentBlog } from '../reducers/blogReducer'
+import { Form, Button, InputGroup } from 'react-bootstrap'
+import { useField } from '../hooks'
 
-const Blog = ({ blog, handleLike, handleDelete }) => {
+const Blog = ({ blog }) => {
+  const dispatch = useDispatch()
+  const { reset: resetComment, ...comment } = useField('text', 'comment')
+  const user = useSelector(state => state.loginUser)
 
-  const [visible, setVisible] = useState('false')
-  const showWhenVisible = {
-    display: visible ? 'none' : '' ,
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-  const hideWhenVisible = {
-    display: visible ? '' : 'none',
-    marginTop: 10,
-    marginBottom: 10
+  const handleLike = (blog) => {
+    const updatedBlog = { ...blog, likes: blog.likes + 1 }
+    dispatch(likeBlog(updatedBlog))
   }
 
-  const toggleVisibility = () => {
-    setVisible(!visible)
+  const handleDelete = (blog) => {
+    const confirmDeletion = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
+
+    if (confirmDeletion) {
+      dispatch(deleteBlog(blog))
+    }
+  }
+
+  const addComment = (event) => {
+    event.preventDefault()
+    dispatch(commentBlog(blog, comment.value))
+    resetComment()
+  }
+
+  if (!blog) {
+    return null
+  }
+
+  const padding = {
+    marginTop: 30,
+    marginBottom: 15
+  }
+
+  const text = {
+    margin: 0,
+    padding: 0
   }
 
   return (
-    <div className='blog'>
-      <div style={hideWhenVisible} className='leanBlog'>
-        {blog.title} {blog.author} <BlogButton handleClick={toggleVisibility} className='viewBlogDetails' buttonText='View' />
+    <div>
+      <h2 style={padding}>{blog.title} {blog.author}</h2>
+      <a href={blog.url}>{blog.url}</a>
+      <p style={text}>likes {blog.likes} <BlogButton handleClick={() => handleLike(blog)} className='likeButton' buttonText='Like' /></p>
+      <p style={text}>added by {blog.user.name}</p>
+      {user.username === blog.user.username &&
+        <div style={padding}>
+          <BlogButton handleClick={() => handleDelete(blog)} className='removeButton' buttonText='Delete Blog' />
+        </div>
+      }
+      <h4 style={padding}>Comments</h4>
+      <div className='form-inline'>
+        <Form onSubmit={addComment}>
+          <InputGroup className='mb-3'>
+            <Form.Control {...comment} placeholder='Write your comment here' />
+            <Button variant='outline-primary' type='submit'>
+              Add comment
+            </Button>
+          </InputGroup>
+        </Form>
       </div>
-      <div style={showWhenVisible} className='completeBlog'>
-        <p>{blog.title} {blog.author} <BlogButton handleClick={toggleVisibility} className='hideButton' buttonText='Hide' /></p>
-        <p>{blog.url}</p>
-        <p>likes {blog.likes} <BlogButton handleClick={() => handleLike(blog)} className='likeButton' buttonText='Like' /></p>
-        <p>{blog.author}</p>
-        <BlogButton handleClick={() => handleDelete(blog)} className='removeButton' buttonText='Remove' />
-      </div>
+      <ul>
+        {blog.comments !== null
+          ? blog.comments.map(comment =>
+            <li key={comment}>{comment}</li>)
+          : null}
+      </ul>
     </div>
   )
 }
