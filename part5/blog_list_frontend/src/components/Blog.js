@@ -45,6 +45,12 @@ const Blog = ({ blog }) => {
           <BlogButton handleClick={() => handleDelete(blog)} className='removeButton' buttonText='Delete Blog' />
         </div>
       }
+      <h4 style={padding}>Comments</h4>
+      <ul>
+        {blog.comments && blog.comments.map(comment =>
+          <li key={comment}>{comment}</li>
+        )}
+      </ul>
     </div>
   )
 }
