@@ -48,17 +48,10 @@ blogRouter.post('/', middleware.userExtractor, async (request, response) => {
 blogRouter.post('/:id/comments', async (request, response) => {
 
   const body = request.body
-  const blog = await Blog.findById(request.params.id)
-
-  const comments = blog.comments === undefined
-    ? []
-    : blog.comments
-
-  console.log(comments)
 
   const updatedBlog = await Blog.findByIdAndUpdate(
     request.params.id, 
-    {comments: comments.concat(body.comments)}, 
+    {comments: body.comments}, 
     {
       new: true,
       strict: false

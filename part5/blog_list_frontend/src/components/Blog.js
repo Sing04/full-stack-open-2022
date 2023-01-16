@@ -1,9 +1,12 @@
 import BlogButton from './BlogButton'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteBlog, likeBlog } from '../reducers/blogReducer'
+import { deleteBlog, likeBlog, commentBlog } from '../reducers/blogReducer'
+import { Form, Button, InputGroup } from 'react-bootstrap'
+import { useField } from '../hooks'
 
 const Blog = ({ blog }) => {
   const dispatch = useDispatch()
+  const { reset: resetComment, ...comment } = useField('text', 'comment')
   const user = useSelector(state => state.loginUser)
 
   const handleLike = (blog) => {
@@ -17,7 +20,12 @@ const Blog = ({ blog }) => {
     if (confirmDeletion) {
       dispatch(deleteBlog(blog))
     }
+  }
 
+  const addComment = (event) => {
+    event.preventDefault()
+    dispatch(commentBlog(blog, comment.value))
+    resetComment()
   }
 
   if (!blog) {
@@ -46,10 +54,21 @@ const Blog = ({ blog }) => {
         </div>
       }
       <h4 style={padding}>Comments</h4>
+      <div className='form-inline'>
+        <Form onSubmit={addComment}>
+          <InputGroup className='mb-3'>
+            <Form.Control {...comment} placeholder='Write your comment here' />
+            <Button variant='outline-primary' type='submit'>
+              Add comment
+            </Button>
+          </InputGroup>
+        </Form>
+      </div>
       <ul>
-        {blog.comments && blog.comments.map(comment =>
-          <li key={comment}>{comment}</li>
-        )}
+        {blog.comments !== null
+          ? blog.comments.map(comment =>
+            <li key={comment}>{comment}</li>)
+          : null}
       </ul>
     </div>
   )

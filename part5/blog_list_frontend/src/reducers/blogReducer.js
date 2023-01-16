@@ -12,7 +12,7 @@ const blogSlice = createSlice({
     setBlogs(state, action) {
       return action.payload
     },
-    addLike(state, action) {
+    updateBlog(state, action) {
       const id = action.payload.id
       const changedBlog = action.payload
       return state.map(blog =>
@@ -25,7 +25,7 @@ const blogSlice = createSlice({
   }
 })
 
-export const { addBlog, setBlogs, addLike, removeBlog } = blogSlice.actions
+export const { addBlog, setBlogs, updateBlog, removeBlog } = blogSlice.actions
 
 export const initializeBlogs = () => {
   return async dispatch => {
@@ -49,8 +49,26 @@ export const likeBlog = (likedBlog) => {
   return async dispatch => {
     try {
       const returnedBlog = await blogService.update(likedBlog.id, likedBlog)
-      dispatch(addLike(returnedBlog))
+      dispatch(updateBlog(returnedBlog))
       dispatch(createNotification(`You liked: ${returnedBlog.title} by ${returnedBlog.author}!`, 'green', 5))
+    } catch(error) {
+      dispatch(createNotification(error.response.data.error, 'red', 5))
+    }
+  }
+}
+
+export const commentBlog = (blog, comment) => {
+  return async dispatch => {
+    try {
+      const comments = blog.comments
+        ? blog.comments
+        : []
+
+      const updatedBlog = { ...blog, comments: comments.concat(comment) }
+
+      const returnedBlog = await blogService.comment(updatedBlog.id, updatedBlog)
+      dispatch(updateBlog(returnedBlog))
+      dispatch(createNotification(`Your comment was added to ${returnedBlog.title} by ${returnedBlog.author}!`, 'green', 5))
     } catch(error) {
       dispatch(createNotification(error.response.data.error, 'red', 5))
     }
